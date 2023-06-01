@@ -90,13 +90,33 @@ export function ChatPage() {
         setMessages([]);
     }, []);
 
+
     const handleAskAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );
-        await chatService.confirmPrompt(prompt);
+        await chatService.confirmPrompt(prompt, "Freeform");
         setPrompt("");
     }, [prompt, setPrompt, setMessages]);
+
+
+    const handleCustom = useCallback(async () => {
+        const chatService = await getServiceManager().getService<IChatService>(
+            CHAT_SERVICE_NAME
+        );   
+        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you add tests for this code? ${prompt}`
+        await chatService.confirmPrompt(strPrompt, "Custom");
+        setPrompt("");            
+    }, [prompt, setPrompt, setMessages]);
+
+    const handleGenVarAction = useCallback(async () => {
+        const chatService = await getServiceManager().getService<IChatService>(
+            CHAT_SERVICE_NAME
+        );   
+        await chatService.confirmPrompt(prompt, "GenVar");
+        setPrompt("");          
+    }, [prompt, setPrompt, setMessages]);
+    
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
 
@@ -170,9 +190,9 @@ export function ChatPage() {
                             {`提问 (${confirmShortcut.label})`}
                         </VSCodeButton>
 
-                        {/* <VSCodeButton>   https://microsoft.github.io/vscode-codicons/dist/codicon.html
-                            <span className="codicon codicon-check"></span>
-                        </VSCodeButton> */}
+                        <VSCodeButton onClick={handleCustom}>  
+                            <span className="codicon codicon-check" ></span>
+                        </VSCodeButton> 
                         
                     </div>
                 </VSCodePanelView>
@@ -222,7 +242,7 @@ export function ChatPage() {
                         />
                         <VSCodeButton
                             disabled={!isReady || prompt.length === 0}
-                            onClick={handleAskAction}
+                            onClick={handleGenVarAction}
                         >
                             {`生成变量名`}
                         </VSCodeButton>
