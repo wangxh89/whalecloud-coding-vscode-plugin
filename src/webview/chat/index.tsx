@@ -173,7 +173,7 @@ export function ChatPage() {
                         <VSCodeTextArea
                             style={{ width: "100%" }}
                             rows={3}
-                            placeholder={`Talk bout the ${
+                            placeholder={`Talk about the ${
                                 hasSelection ? "selected contents" : "whole document"
                             }...`}
                             disabled={!isReady}
