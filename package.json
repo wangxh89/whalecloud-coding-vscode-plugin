@@ -158,10 +158,9 @@
         "configuration": {
             "title": "浩鲸智能编程助手",
             "properties": {
-                "whalecloud.openaiApiKey": {
+                "whalecloud.devCloudAccessToken": {
                     "type": "string",
-                    "default": "",
-                    "description": "ZCM Key"
+                    "default": ""
                 },
                 "whalecloud.model": {
                     "type": "string",
