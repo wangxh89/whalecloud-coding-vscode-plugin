@@ -36,7 +36,6 @@
 
 .chat-icon {
     margin: 0 5px 15px 0;
-    /* flex-basis: 0; */
     flex-grow: 1;
     max-width: calc(33.33% - 10px);; 
     flex-basis: calc(33.33% - 10px);
@@ -132,7 +131,6 @@
 }
 
 .chat-msg-block-toolbar {
-    /* display: inline-flex; */
     display: flex;
     justify-content: flex-end;
     width: auto;
