@@ -8,6 +8,7 @@ export interface IChatService extends IService {
     syncState(): Promise<void>;
     insertCodeSnippet(contents: string): Promise<void>;
     generateCode(prompt: string): Promise<void>;
+    getActiveEditorSelectText(): Promise<string>;
 }
 
 export const CHAT_VIEW_SERVICE_NAME = "chat_view";

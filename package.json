@@ -2,7 +2,7 @@
     "name": "whalecloud-coding-vscode-plugin",
     "displayName": "浩鲸智能编程助手（WhaleCloud Coding Plus）",
     "description": "浩鲸智能编程助手（WhaleCloud Coding Plus） for Visual Studio Code",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "tigerwong",
     "repository": {
         "type": "git",
@@ -31,30 +31,6 @@
                 "category": "WhaleCloud"
             },
             {
-                "command": "whalecloud.addTests",
-                "title": "添加测试（敬请期待）",
-                "enablement": "activeEditor =~ /^workbench\\.editors\\./",
-                "category": "WhaleCloud"
-            },
-            {
-                "command": "whalecloud.whyBroken",
-                "title": "为什么它坏了？（敬请期待）",
-                "enablement": "activeEditor =~ /^workbench\\.editors\\./",
-                "category": "WhaleCloud"
-            },
-            {
-                "command": "whalecloud.explainPls",
-                "title": "解释代码（敬请期待）",
-                "enablement": "activeEditor =~ /^workbench\\.editors\\./",
-                "category": "WhaleCloud"
-            },
-            {
-                "command": "whalecloud.refactor",
-                "title": "重构器（敬请期待）",
-                "enablement": "activeEditor =~ /^workbench\\.editors\\./",
-                "category": "WhaleCloud"
-            },
-            {
                 "command": "whalecloud.showLastResult",
                 "title": "Show Generated Code",
                 "enablement": "whalecloud.hasActiveGenerateSession",
@@ -76,7 +52,7 @@
                 "command": "whalecloud.resetChat",
                 "title": "Reset Chat",
                 "category": "WhaleCloud",
-                "icon": "$(trash)"
+                "icon": "$(clear-all)"
             },
             {
                 "command": "whalecloud.signInUp",
@@ -114,7 +90,7 @@
                 {
                     "type": "webview",
                     "id": "whalecloudchatview",
-                    "name": "Chat"
+                    "name": "Coding Plus"
                 }
             ]
         },
@@ -127,18 +103,6 @@
             "whalecloud.submenu": [
                 {
                     "command": "whalecloud.generateCode"
-                },
-                {
-                    "command": "whalecloud.addTests"
-                },
-                {
-                    "command": "whalecloud.whyBroken"
-                },
-                {
-                    "command": "whalecloud.explainPls"
-                },
-                {
-                    "command": "whalecloud.refactor"
                 }
             ],
             "view/title": [
@@ -230,6 +194,11 @@
         "react-dom": "^18.2.0",
         "react-markdown": "^8.0.6",
         "react-syntax-highlighter": "^15.5.0",
+        "rehype-highlight": "^6.0.0",
+        "rehype-katex": "^6.0.2",
+        "remark-breaks": "^3.0.2",
+        "remark-gfm": "^3.0.1",
+        "remark-math": "^5.1.1",
         "uuid": "^9.0.0"
     }
 }

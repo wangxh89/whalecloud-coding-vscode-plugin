@@ -116,8 +116,14 @@ export function ChatPage() {
     const handleCustom = useCallback(async (require: String) => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );   
-        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you ${require} for this code? ${prompt}`;
+        );  
+        let retPrompt = prompt; 
+        if (prompt.trim() === "") {
+            retPrompt = await chatService.getActiveEditorSelectText();
+            console.log("----------------------------------", retPrompt);
+        }
+
+        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you ${require} for this code? ${retPrompt}`;
         await chatService.confirmPrompt(strPrompt, "Custom");
         setPrompt("");
         // setContextSelect('');            

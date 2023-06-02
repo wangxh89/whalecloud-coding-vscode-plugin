@@ -100,6 +100,20 @@ export class ChatServiceImpl implements IChatService {
         }
     }
 
+    getActiveEditorSelectText():Promise<string>{
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showWarningMessage(
+                "在聊天之前，您必须激活编辑器。"
+            );
+            throw new Error("No active editor");
+        }        
+        const { document, selection } = editor;
+
+        const selectText = document.getText(selection);
+        return Promise.resolve(selectText);
+    }
+
     async generateCode(prompt: string): Promise<void> {
         // Get the current editor and selection.
         const editor = vscode.window.activeTextEditor;
