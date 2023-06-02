@@ -4,13 +4,23 @@ import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
 import { SelectionRange } from "../generate/core";
 import { chat, resetChat } from "./core";
-
+import { getGlobalState } from "../globalState";
+import { GenerateSession } from "../generate";
 export interface ChatServiceClient {
     handleReadyStateChange?: (isReady: boolean) => void;
     handleNewMessage?: (msg: MessageItemModel) => void;
     handleMessageChange?: (msg: MessageItemModel) => void;
     handleClearMessage?: () => void;
 }
+
+function setHasActiveGenerateSessionContext(value: boolean) {
+    vscode.commands.executeCommand(
+        "setContext",
+        "whalecloud.hasActiveGenerateSession",
+        value
+    );
+}
+
 
 export class ChatServiceImpl implements IChatService {
     #currentMessageId = 0;
@@ -88,6 +98,31 @@ export class ChatServiceImpl implements IChatService {
         for (const client of this.#clients) {
             client.handleMessageChange?.call(client, msg);
         }
+    }
+
+    async generateCode(prompt: string): Promise<void> {
+        // Get the current editor and selection.
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        // End the active session first.
+        const globalState = getGlobalState();
+        const activeSession = globalState.activeSession;
+        if (activeSession) {
+            activeSession.dispose();
+        }
+
+        const session = new GenerateSession(prompt, editor);
+        session.onDidDispose(() => {
+            globalState.activeSession = null;
+            setHasActiveGenerateSessionContext(false);
+        });
+        session.start();
+        session.showResult();
+        globalState.activeSession = session;
+        setHasActiveGenerateSessionContext(true);        
     }
 
     async confirmPrompt(prompt: string, msgType: string): Promise<void> {

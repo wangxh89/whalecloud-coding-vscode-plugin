@@ -122,6 +122,13 @@ export function ChatPage() {
         setPrompt("");          
     }, [prompt, setPrompt, setMessages]);
     
+    const handleGenCodeAction = useCallback(async () => {
+        const chatService = await getServiceManager().getService<IChatService>(
+            CHAT_SERVICE_NAME
+        );   
+        await chatService.generateCode(prompt);
+        setPrompt("");          
+    }, [prompt, setPrompt, setMessages]);
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
 
@@ -172,7 +179,7 @@ export function ChatPage() {
                 <VSCodePanelTab id="AI">AI对话</VSCodePanelTab>
                 <VSCodePanelTab id="search">研发云</VSCodePanelTab>
                 <VSCodePanelTab id="genVar">变量名</VSCodePanelTab>
-                <VSCodePanelTab id="genCode">代码生成</VSCodePanelTab>                
+                <VSCodePanelTab id="genCode">代码生成修改</VSCodePanelTab>                
 
                 <VSCodePanelView id="AI">
                     <div className="chat-input-area chat-input-area-ai">
@@ -284,7 +291,7 @@ export function ChatPage() {
                         <VSCodeTextArea
                             style={{ width: "100%" }}
                             rows={3}
-                            placeholder={`请输入要生成的代码提示语`}
+                            placeholder={`请选中右侧编辑器代码，输入要修改的提示语。或者直接输入要生成的代码提示语,`}
                             disabled={!isReady}
                             value={prompt}
                             onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -294,9 +301,9 @@ export function ChatPage() {
                         />
                         <VSCodeButton
                             disabled={!isReady || prompt.length === 0}
-                            onClick={handleGenVarAction}
+                            onClick={handleGenCodeAction}
                         >
-                            {`生成代码`}
+                            {`生成、修改代码`}
                         </VSCodeButton>
                     </div>
                 </VSCodePanelView>                                                
