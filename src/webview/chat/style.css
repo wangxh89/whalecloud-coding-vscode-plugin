@@ -21,28 +21,38 @@
 }
 
 .chat-input-area-ai {
-    width: 75%;
+    width: 100%;
 }
 
+/* AI对话-9宫格图标区域 */
 .chat-icon-area {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 25%;
-    padding: 12px 0px;
-    max-width: 150px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 将父元素分为3列 */
+    grid-template-rows: repeat(3, 1fr); /* 将父元素分为3行 */
+    grid-gap: 10px;
+    padding: 12px 10px 12px 0;
+    width: 100px;
     border-top: 1px solid var(--vscode-notebook-cellToolbarSeparator);
 }
 
-.chat-icon {
-    margin: 0 5px 15px 0;
-    flex-grow: 1;
-    max-width: calc(33.33% - 10px);; 
-    flex-basis: calc(33.33% - 10px);
+/* AI对话-9宫格图标区域-图标 */
+.chat-input-action {
+    width: 25px;
+    height: 25px;
+    line-height: 32px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.192);
+    background-color: rgb(30, 30, 30);
+    border-radius: 10px;
+    color: rgb(187, 187, 187);
+    animation: slide-in ease 0.3s;
+    box-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
+    transition: all ease 0.3s;
+    font-size: 16px;
 }
 
-.chat-icon:nth-child(3n+3) {
-    margin-right: 0;
+.chat-icon .codicon {
+    /* font-size: 16px; */
 }
 
 .chat-msg {
@@ -146,28 +156,12 @@
     opacity: 0.6;
 }
 
-.chat-input-action {
-    display: inline-flex;
-    border-radius: 20px;
-    font-size: 12px;
-    background-color: rgb(30, 30, 30);
-    color: rgb(187, 187, 187);
-    border: 1px solid rgba(255, 255, 255, 0.192);
-    padding: 4px 10px;
-    animation: slide-in ease 0.3s;
-    box-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
-    transition: all ease 0.3s;
-    margin-bottom: 10px;
-    align-items: center;
-  }
 
 
 .clickable {
     cursor: pointer;
-  
-
   }
 
-  .clickable:hover {
+.clickable:hover {
     filter: brightness(0.9);
-  }
+}

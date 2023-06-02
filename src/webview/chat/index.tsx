@@ -69,6 +69,7 @@ export function ChatPage() {
     const [hasSelection, setHasSelection] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [prompt, setPrompt] = useState("");
+    // const [contextSelect, setContextSelect] = useState('');
     const [autoScrollFlag, setAutoScrollFlag] = useState(AUTO_SCROLL_FLAG_NONE);
     const chatListRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,13 @@ export function ChatPage() {
         setMessages([]);
     }, []);
 
+    // const contextIfSelect = async () => {
+    //     const context = selectContext();
+    //     if (context) {
+    //         setContextSelect(context);
+    //     }
+    // };
+
 
     const handleAskAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
@@ -105,13 +113,14 @@ export function ChatPage() {
     }, [prompt, setPrompt, setMessages]);
 
 
-    const handleCustom = useCallback(async () => {
+    const handleCustom = useCallback(async (require: String) => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you add tests for this code? ${prompt}`
+        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you ${require} for this code? ${prompt}`;
         await chatService.confirmPrompt(strPrompt, "Custom");
-        setPrompt("");            
+        setPrompt("");
+        // setContextSelect('');            
     }, [prompt, setPrompt, setMessages]);
 
     const handleGenVarAction = useCallback(async () => {
@@ -165,6 +174,7 @@ export function ChatPage() {
             .then((chatService) => {
                 chatService.syncState();
             });
+        // contextIfSelect();
     }, []);
 
     return (
@@ -184,7 +194,6 @@ export function ChatPage() {
                 <VSCodePanelView id="AI">
                     <div className="chat-input-area chat-input-area-ai">
                         <VSCodeTextArea
-                            style={{ width: "100%" }}
                             rows={3}
                             placeholder={`Talk about the ${
                                 hasSelection ? "selected contents" : "whole document"
@@ -204,33 +213,33 @@ export function ChatPage() {
                         </VSCodeButton>
                     </div>
                     <div className="chat-icon-area">
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-check"></span>
+                        <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('add unit tests')}>
+                            <span className="codicon codicon-inspect"></span>
                         </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-account"></span>
+                        <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('transform Unicode')}>
+                            <span className="codicon codicon-file-binary"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('add Chinese code comment')}>
+                            <span className="codicon codicon-person-add"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('do code refactoring')}>
+                            <span className="codicon codicon-debug-restart-frame"></span>
                             </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-activate-breakpoints"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-add"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-archive"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-debug"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-color-mode"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-github-inverted"></span>
-                            </div>
-                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
-                            <span className="codicon codicon-heart"></span>
-                            </div>
+                        <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('interpretive code')}>
+                            <span className="codicon codicon-question"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('translate into Chinese')}>
+                            <span className="codicon codicon-preserve-case"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('write regular expressions')}>
+                            <span className="codicon codicon-regex"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('analysis')}>
+                            <span className="codicon codicon-debug-console"></span>
+                        </div>
+                        <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('add code example')}>
+                            <span className="codicon codicon-eye"></span>
+                        </div>
                     </div>
                 </VSCodePanelView>
 
