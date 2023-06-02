@@ -135,7 +135,7 @@ export class ChatServiceImpl implements IChatService {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showWarningMessage(
-                "You have to activate an editor before chatting."
+                "在聊天之前，您必须激活编辑器。"
             );
             throw new Error("No active editor");
         }

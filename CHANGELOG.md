@@ -1,3 +1,9 @@
+### 0.0.3
+
+-   将代码生成移至面板中
+-   增加 启变量名
+-   增加 小工具
+
 ### 0.0.2
 
 -   修复 view id 冲突问题 'A view with id chat is already registered.'

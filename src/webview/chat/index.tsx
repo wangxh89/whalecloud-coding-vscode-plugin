@@ -176,10 +176,10 @@ export function ChatPage() {
             </div>
             
             <VSCodePanels>
-                <VSCodePanelTab id="AI">AI对话</VSCodePanelTab>
-                <VSCodePanelTab id="search">研发云</VSCodePanelTab>
-                <VSCodePanelTab id="genVar">变量名</VSCodePanelTab>
-                <VSCodePanelTab id="genCode">代码生成修改</VSCodePanelTab>                
+                <VSCodePanelTab id="AI">问答</VSCodePanelTab>
+                <VSCodePanelTab id="search">搜索</VSCodePanelTab>
+                <VSCodePanelTab id="genVar">命名服务</VSCodePanelTab>
+                <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>                
 
                 <VSCodePanelView id="AI">
                     <div className="chat-input-area chat-input-area-ai">
@@ -204,33 +204,33 @@ export function ChatPage() {
                         </VSCodeButton>
                     </div>
                     <div className="chat-icon-area">
-                        <VSCodeButton className="chat-icon" title="check" onClick={handleCustom}>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-check"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="account" onClick={handleCustom}>
+                        </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-account"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="activate-breakpoints" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-activate-breakpoints"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="add" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-add"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="archive" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-archive"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="debug" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-debug"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="color-mode" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-color-mode"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="github-inverted" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-github-inverted"></span>
-                        </VSCodeButton>
-                        <VSCodeButton className="chat-icon" title="heart" onClick={handleCustom}>
+                            </div>
+                        <div className={`chat-input-action clickable`} title="account" onClick={handleCustom}>
                             <span className="codicon codicon-heart"></span>
-                        </VSCodeButton>
+                            </div>
                     </div>
                 </VSCodePanelView>
 
