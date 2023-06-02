@@ -80,7 +80,12 @@ export function ChatPage() {
         setAutoScrollFlag(AUTO_SCROLL_FLAG_FORCED);
     }, []);
     const updateMessageAction = useCallback((msg: MessageItemModel) => {
+        console.warn("-------------------------updateMessageAction msg props--------",msg.contents, "----", msg);
         msg.contents = msg.contents.replace(/\\n/g, "\n"); // 使用正则表达式和replace方法
+        msg.contents = msg.contents.replace(/\\"/g, "\""); // 使用正则表达式和replace方法
+        
+        console.warn("-------------------------updateMessageAction msg props after--------",msg.contents, "----", msg);
+
         setMessages((prev) => {
             return messagesWithUpdatedBotMessage(prev, msg);
         });
@@ -165,8 +170,9 @@ export function ChatPage() {
             
             <VSCodePanels>
                 <VSCodePanelTab id="AI">AI对话</VSCodePanelTab>
-                <VSCodePanelTab id="search">代码库文档库搜索</VSCodePanelTab>
+                <VSCodePanelTab id="search">研发云</VSCodePanelTab>
                 <VSCodePanelTab id="genVar">变量名</VSCodePanelTab>
+                <VSCodePanelTab id="genCode">代码生成</VSCodePanelTab>                
 
                 <VSCodePanelView id="AI">
                     <div className="chat-input-area chat-input-area-ai">
@@ -252,7 +258,7 @@ export function ChatPage() {
                 </VSCodePanelView>     
 
                 <VSCodePanelView id="genVar">
-                <div className="chat-input-area">
+                    <div className="chat-input-area">
                         <VSCodeTextArea
                             style={{ width: "100%" }}
                             rows={3}
@@ -271,7 +277,29 @@ export function ChatPage() {
                             {`生成变量名`}
                         </VSCodeButton>
                     </div>
-                </VSCodePanelView>                                
+                </VSCodePanelView>     
+                
+                <VSCodePanelView id="genCode">
+                    <div className="chat-input-area">
+                        <VSCodeTextArea
+                            style={{ width: "100%" }}
+                            rows={3}
+                            placeholder={`请输入要生成的代码提示语`}
+                            disabled={!isReady}
+                            value={prompt}
+                            onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                                setPrompt(e.target.value);
+                            }}
+                            onKeyDown={confirmShortcut.keyDownHandler}
+                        />
+                        <VSCodeButton
+                            disabled={!isReady || prompt.length === 0}
+                            onClick={handleGenVarAction}
+                        >
+                            {`生成代码`}
+                        </VSCodeButton>
+                    </div>
+                </VSCodePanelView>                                                
             </VSCodePanels>
         </div>
     );

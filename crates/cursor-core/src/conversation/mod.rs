@@ -17,7 +17,7 @@ use crate::{
 use self::models::RequestBody;
 
 const SIGN_IN_ITEM: &str = "Sign In / Sign Up";
-const CONFIGURE_API_KEY_ITEM: &str = "Configure API Key";
+const CONFIGURE_API_KEY_ITEM: &str = "配置研发云AccessToken";
 
 async fn send_conversation_request(
     path: &str,
@@ -33,8 +33,8 @@ async fn send_conversation_request(
                 let context = get_extension_context();
                 match context
                     .show_information_message(
-                        "You have to sign in / sign up or configure API key to use Cursor AI features",
-                        vec![SIGN_IN_ITEM, CONFIGURE_API_KEY_ITEM]
+                        "您必须配置云雀研发云AccessToken才能使用浩鲸智能编程助手",
+                        vec![CONFIGURE_API_KEY_ITEM]
                             .into_iter()
                             .map(JsValue::from)
                             .collect(),
