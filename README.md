@@ -30,3 +30,8 @@ GPT 大模型在编程能力方面表现越来越出色，市面上已经有不�
 
 编写代码没有头绪时，可以询问助手，进行思路生成，生成思路的同时还可以提供样例代码，大大提高了效率。
 AI 能力对标了基于 GPT 大模型的 Cursor，相关功能做了平替，AI 能力很强大，同学们可继续挖掘探索新的场景。
+
+# 2. 开发
+
+1. 安装 rust 开发环境 、wasm-pack
+2. package.json "icon": "$(clear-all)" 中用到的图标 https://code.visualstudio.com/api/references/icons-in-labels

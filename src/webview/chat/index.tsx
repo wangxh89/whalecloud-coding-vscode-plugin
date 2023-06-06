@@ -81,12 +81,6 @@ export function ChatPage() {
         setAutoScrollFlag(AUTO_SCROLL_FLAG_FORCED);
     }, []);
     const updateMessageAction = useCallback((msg: MessageItemModel) => {
-        console.warn("-------------------------updateMessageAction msg props--------",msg.contents, "----", msg);
-        msg.contents = msg.contents.replace(/\\n/g, "\n"); // 使用正则表达式和replace方法
-        msg.contents = msg.contents.replace(/\\"/g, "\""); // 使用正则表达式和replace方法
-        
-        console.warn("-------------------------updateMessageAction msg props after--------",msg.contents, "----", msg);
-
         setMessages((prev) => {
             return messagesWithUpdatedBotMessage(prev, msg);
         });
@@ -144,6 +138,22 @@ export function ChatPage() {
         await chatService.generateCode(prompt);
         setPrompt("");          
     }, [prompt, setPrompt, setMessages]);
+
+    const handleRepoCodeAction = useCallback(async () => {
+        const chatService = await getServiceManager().getService<IChatService>(
+            CHAT_SERVICE_NAME
+        );   
+        await chatService.generateCode(prompt);
+        setPrompt("");          
+    }, [prompt, setPrompt, setMessages]);
+   
+    const handleRepoDocAction = useCallback(async () => {
+        const chatService = await getServiceManager().getService<IChatService>(
+            CHAT_SERVICE_NAME
+        );   
+        await chatService.generateCode(prompt);
+        setPrompt("");          
+    }, [prompt, setPrompt, setMessages]);    
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
 
@@ -265,13 +275,13 @@ export function ChatPage() {
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", gap:"20px" ,width:"100%"}}>
                             <VSCodeButton
                                 disabled={!isReady || prompt.length === 0}
-                                onClick={handleAskAction}
+                                onClick={handleRepoCodeAction}
                             >
                                 {'代码库搜索'}
                             </VSCodeButton>
                             <VSCodeButton
                                 disabled={!isReady || prompt.length === 0}
-                                onClick={handleAskAction}
+                                onClick={handleRepoDocAction}
                             >
                                 {'文档库搜索'}
                             </VSCodeButton>                            
