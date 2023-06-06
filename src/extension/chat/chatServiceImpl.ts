@@ -186,13 +186,14 @@ export class ChatServiceImpl implements IChatService {
         vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Window,
-                title: "Generating reply...",
+                title: "结果生成中...，点击取消",
                 cancellable: true,
             },
             async (_progress, token) => {
                 const abortController = new AbortController();
                 token.onCancellationRequested(() => {
                     abortController.abort();
+                    that.#updateMessage(replyMsgId, "", true);
                 });
                 this.#currentAbortController = abortController;
                 this.#updateReadyState(false);
