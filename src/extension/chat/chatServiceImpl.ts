@@ -93,10 +93,6 @@ export class ChatServiceImpl implements IChatService {
         }
 
         msg.contents += newContents;
-
-        msg.contents = msg.contents.replace(/\\n/g, "\n"); // 使用正则表达式和replace方法
-        msg.contents = msg.contents.replace(/\\"/g, "\""); // 使用正则表达式和replace方法
-                
         msg.isFinished = finished;
 
         for (const client of this.#clients) {

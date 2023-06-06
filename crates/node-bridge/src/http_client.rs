@@ -172,8 +172,8 @@ impl HttpResponse {
         resp.on(
             "data",
             closure!(|chunk: Buffer| {
-                #[cfg(debug_assertions)]
-                console::log_str("chunk received");
+                // #[cfg(debug_assertions)]
+                // console::log_str("chunk received");
                 data_stream_sender.send(Some(chunk));
             })
             .into_js_value(),

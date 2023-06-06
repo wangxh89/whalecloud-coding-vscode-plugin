@@ -204,7 +204,7 @@ export function ChatPage() {
             <VSCodePanels>
                 <VSCodePanelTab id="AI">问答</VSCodePanelTab>
                 <VSCodePanelTab id="search">搜索</VSCodePanelTab>
-                <VSCodePanelTab id="genVar">命名服务</VSCodePanelTab>
+                <VSCodePanelTab id="genVar">命名</VSCodePanelTab>
                 <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>                
 
                 <VSCodePanelView id="AI">

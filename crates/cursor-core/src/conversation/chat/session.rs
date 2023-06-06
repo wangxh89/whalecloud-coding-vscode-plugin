@@ -77,7 +77,8 @@ impl Session {
         let result_stream = input.result_stream();
         while let Some(data) = data_stream.next().await {
             #[cfg(debug_assertions)]
-            console::log_str(&data);
+            console::log_str(format!("send_message  data ============{:?}----end", &data).as_str());
+
             result_stream.write(&data);
             message.push_str(&data);
         }
