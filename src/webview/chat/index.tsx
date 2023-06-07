@@ -157,6 +157,10 @@ export function ChatPage() {
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
 
+    const confirmGenVar = useConfirmShortcut(handleGenVarAction);
+
+    const confirmGenCode = useConfirmShortcut(handleGenCodeAction);
+
     useLayoutEffect(() => {
         if (!autoScrollFlag) {
             return;
@@ -270,7 +274,6 @@ export function ChatPage() {
                             onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                 setPrompt(e.target.value);
                             }}
-                            onKeyDown={confirmShortcut.keyDownHandler}
                         />
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", gap:"20px" ,width:"100%"}}>
                             <VSCodeButton
@@ -300,13 +303,13 @@ export function ChatPage() {
                             onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                 setPrompt(e.target.value);
                             }}
-                            onKeyDown={confirmShortcut.keyDownHandler}
+                            onKeyDown={confirmGenVar.keyDownHandler}
                         />
                         <VSCodeButton
                             disabled={!isReady || prompt.length === 0}
                             onClick={handleGenVarAction}
                         >
-                            {`生成变量名`}
+                            {`生成变量名 (${confirmGenVar.label})`}
                         </VSCodeButton>
                     </div>
                 </VSCodePanelView>     
@@ -322,13 +325,13 @@ export function ChatPage() {
                             onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                 setPrompt(e.target.value);
                             }}
-                            onKeyDown={confirmShortcut.keyDownHandler}
+                            onKeyDown={confirmGenCode.keyDownHandler}
                         />
                         <VSCodeButton
                             disabled={!isReady || prompt.length === 0}
                             onClick={handleGenCodeAction}
                         >
-                            {`生成、修改代码`}
+                            {`生成、修改代码 (${confirmGenCode.label})`}
                         </VSCodeButton>
                     </div>
                 </VSCodePanelView>                                                
