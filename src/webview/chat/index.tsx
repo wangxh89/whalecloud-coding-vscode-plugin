@@ -143,7 +143,7 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        await chatService.generateCode(prompt);
+        await chatService.confirmPrompt(prompt, "Freeform");
         setPrompt("");          
     }, [prompt, setPrompt, setMessages]);
    
@@ -151,7 +151,7 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        await chatService.generateCode(prompt);
+        await chatService.confirmPrompt(prompt, "Freeform");
         setPrompt("");          
     }, [prompt, setPrompt, setMessages]);    
 
@@ -160,6 +160,9 @@ export function ChatPage() {
     const confirmGenVar = useConfirmShortcut(handleGenVarAction);
 
     const confirmGenCode = useConfirmShortcut(handleGenCodeAction);
+
+
+    const repoKeyhandler = () => {};
 
     useLayoutEffect(() => {
         if (!autoScrollFlag) {
@@ -234,31 +237,31 @@ export function ChatPage() {
                     </div>
                     <div className="chat-icon-area">
                         <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('add unit tests')}>
-                            <span className="codicon codicon-inspect"></span>
+                            <span>测</span>
                         </div>
                         <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('transform Unicode')}>
-                            <span className="codicon codicon-file-binary"></span>
+                            <span className="icon-unicode" style={{lineHeight:"32px", height:"32px"}}></span>
                         </div>
                         <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('add Chinese code comment')}>
-                            <span className="codicon codicon-person-add"></span>
+                            <span>/*/</span>
                         </div>
                         <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('do code refactoring')}>
-                            <span className="codicon codicon-debug-restart-frame"></span>
+                            <span>构</span>
                             </div>
                         <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('interpretive code')}>
-                            <span className="codicon codicon-question"></span>
+                            <span>释</span>
                         </div>
                         <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('translate into Chinese')}>
-                            <span className="codicon codicon-preserve-case"></span>
+                            <span>译</span>
                         </div>
                         <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('write regular expressions')}>
-                            <span className="codicon codicon-regex"></span>
+                            <span>则</span>
                         </div>
                         <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('analysis')}>
-                            <span className="codicon codicon-debug-console"></span>
+                            <span>析</span>
                         </div>
                         <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('add code example')}>
-                            <span className="codicon codicon-eye"></span>
+                            <span>例</span>
                         </div>
                     </div>
                 </VSCodePanelView>
@@ -274,6 +277,7 @@ export function ChatPage() {
                             onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                                 setPrompt(e.target.value);
                             }}
+                            onKeyDown={repoKeyhandler}
                         />
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", gap:"20px" ,width:"100%"}}>
                             <VSCodeButton

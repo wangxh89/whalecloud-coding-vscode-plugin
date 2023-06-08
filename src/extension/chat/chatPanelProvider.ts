@@ -128,6 +128,10 @@ export class ChatPanelProvider
         const codiconsUri = webview.asWebviewUri(
             vscode.Uri.joinPath(baseUri, "codicon.css")
         );
+
+        const icomoonUri = webview.asWebviewUri(
+            vscode.Uri.joinPath(baseUri, "icomoon.css")
+        );        
         const nonce = getNonce();
 
         return `
@@ -142,6 +146,7 @@ export class ChatPanelProvider
                     window.__codeCursorPageName = "whalecloudchatview";
                 </script>
                 <link href="${codiconsUri}" rel="stylesheet" />
+                <link href="${icomoonUri}" rel="stylesheet" />
             </head>
             <body>
                 <div id="root"></div>

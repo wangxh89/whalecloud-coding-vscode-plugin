@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-
+import axios from "axios";
 import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
 import { SelectionRange } from "../generate/core";
@@ -114,6 +114,65 @@ export class ChatServiceImpl implements IChatService {
         return Promise.resolve(selectText);
     }
 
+    async searchRepo(prompt: string): Promise<void> {
+        const param = JSON.parse(prompt);
+        this.#addMessage({
+            id: "",
+            contents: param.keyword,
+        });
+        const replyMsgId = this.#addMessage({
+            id: "",
+            contents: "",
+            isReply: true,
+        });
+
+        const that = this;        
+        if(param.searchType === 'doc') {
+            try {
+                let config = {
+                    method: 'post',
+                    url: 'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search',
+                    headers: { 
+                      'token': 'dbd58f19645e862d37420f1521b60ce234ab2874', 
+                      'Content-Type': 'application/json'
+                    },
+                    data : param
+                  };                
+                const result = await axios.request(config);
+                
+                console.log('searchRepo------------' , result.data); 
+                if (result.data.data.length > 0) {
+                    for( const msg of result.data.data) {
+                        that.#updateMessage(replyMsgId, msg.content as string);
+                    }   
+                }
+               } catch (error) {
+                console.log(error);
+                that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
+              }           
+        } 
+        else if(param.searchType === 'code') {
+            try {
+                const result = await axios.get(
+                    'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search'
+                );
+                
+                console.log('searchRepo------------' , result.data); 
+                if (result.data.data.length > 0) {
+                    for( const msg of result.data.data) {
+                        const content = `#### ${msg.title} 
+                            ${msg.content}
+                        `;
+                        that.#updateMessage(replyMsgId, msg.content as string);
+                    }   
+                }
+               } catch (error) {
+                console.log(error);
+                that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
+              }           
+        } 
+    }
+
     async generateCode(prompt: string): Promise<void> {
         // Get the current editor and selection.
         const editor = vscode.window.activeTextEditor;
@@ -212,7 +271,7 @@ export class ChatServiceImpl implements IChatService {
                     // TODO: optimize the display of error message.
                     this.#updateMessage(
                         replyMsgId,
-                        "\n(请求失败，请检查 1. ZCM Key是否填写正确 2. 至dev.iwhalecloud.com 网络连接)",
+                        "\n(请求失败，请检查 1. ZCM Key是否填写正确 2. 至dev.iwhalecloud.com 网络连接是否联通 3.重启下vscode)",
                         true
                     );
                 } finally {
