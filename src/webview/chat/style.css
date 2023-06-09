@@ -22,7 +22,11 @@ pre code {
 }
 
 code {
-    padding: 3px 5px;
+    padding: 0px 4px;
+    color: #e3e7ed;
+    border-radius: 6px;
+    white-space: break-spaces;
+    background-color: hsla(215,8%,47%,.4);
 }
 
 .hljs,
