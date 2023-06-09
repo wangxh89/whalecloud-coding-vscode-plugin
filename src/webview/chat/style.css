@@ -4,10 +4,20 @@
     display: flex;
     flex-direction: column;
 }
+.markdown-body {
+    line-height: 1.5;
+}
 
 pre {
     position: relative;
     padding: 0 10px 0 0;
+}
+
+code {
+    padding: 2px 4px;
+    border-radius: 6px;
+    white-space: break-spaces;
+    background-color: hsl(215deg 18% 66% / 40%);
 }
 
 pre,
@@ -18,15 +28,7 @@ code {
 pre code {
     display: block;
     overflow-x: auto;
-    padding: 1em;
-}
-
-code {
-    padding: 0px 4px;
-    color: #e3e7ed;
-    border-radius: 6px;
-    white-space: break-spaces;
-    background-color: hsla(215,8%,47%,.4);
+    background-color: initial;
 }
 
 .hljs,
@@ -149,14 +151,6 @@ pre .action-code-button {
     transition: all ease 0.3s;
 }
 
-/* pre .action-code-button:after {
-    content: "copy";
-} */
-
-/* pre .action-code-button:hover {
-    opacity: 1;
-} */
-
 .chat-list {
     flex: 1;
     overflow-x: hidden;
@@ -249,7 +243,6 @@ pre .action-code-button {
 .chat-msg-contents pre {
     margin: 0 -16px;
     padding: 0px 16px;
-    padding-bottom: 16px;
     overflow-x: overlay;
 }
 
