@@ -151,8 +151,19 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        await chatService.confirmPrompt(prompt, "Freeform");
-        setPrompt("");          
+            
+            const param = {
+            "keyword": prompt, // 搜索内容            
+            "page": "0", // 页数           
+            "pageSize": "3", // 每页数据           
+            "projectCode": "", // 项目ID            
+            "scope": "inner", // 内网数据或者外网数据，现在只支持搜索内网数据            
+            "searchType": "doc", // 搜索doc或者code            
+            };
+            
+            await chatService.searchRepo(JSON.stringify(param));
+            
+            setPrompt("");        
     }, [prompt, setPrompt, setMessages]);    
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);

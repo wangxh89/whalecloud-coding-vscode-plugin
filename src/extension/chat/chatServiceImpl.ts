@@ -86,6 +86,20 @@ export class ChatServiceImpl implements IChatService {
         return msg.id;
     }
 
+
+    // #addHTMLMessage(msg: MessageItemModel): string {
+    //     const id = ++this.#currentMessageId;
+    //     msg.id =`bot:${id}`;
+    //     this.#messages.push(msg);
+    //     this.#messageIndex.set(msg.id, msg);
+
+    //     for (const client of this.#clients) {
+    //         client.handleNewMessage?.call(client, msg);
+    //     }
+
+    //     return msg.id;
+    // }    
+
     #updateMessage(msgId: string, newContents: string, finished?: boolean) {
         const msg = this.#messageIndex.get(msgId);
         if (!msg) {
@@ -99,6 +113,22 @@ export class ChatServiceImpl implements IChatService {
             client.handleMessageChange?.call(client, msg);
         }
     }
+
+    #updateHtmlMessage(msgId: string, contents: string, title: string, originUrl:string) {
+        const msg = this.#messageIndex.get(msgId);
+        if (!msg) {
+            return;
+        }
+
+        msg.contents = contents;
+        msg.isHtml = true;
+        msg.title = title;
+        msg.originUrl = originUrl;
+
+        for (const client of this.#clients) {
+            client.handleMessageChange?.call(client, msg);
+        }
+    }    
 
     getActiveEditorSelectText():Promise<string>{
         const editor = vscode.window.activeTextEditor;
@@ -120,11 +150,11 @@ export class ChatServiceImpl implements IChatService {
             id: "",
             contents: param.keyword,
         });
-        const replyMsgId = this.#addMessage({
-            id: "",
-            contents: "",
-            isReply: true,
-        });
+        // const replyMsgId = this.#addMessage({
+        //     id: "",
+        //     contents: "",
+        //     isReply: true,
+        // });
 
         const that = this;        
         if(param.searchType === 'doc') {
@@ -143,34 +173,41 @@ export class ChatServiceImpl implements IChatService {
                 console.log('searchRepo------------' , result.data); 
                 if (result.data.data.length > 0) {
                     for( const msg of result.data.data) {
-                        that.#updateMessage(replyMsgId, msg.content as string);
+                        that.#addMessage({
+                            id:"", 
+                            contents: msg.content as string, 
+                            title: msg.title as string, 
+                            originUrl: msg.originUrl as string,
+                            isReply: true,
+                            isHtml: true,
+                            isFinished:true
+                        });
                     }   
                 }
                } catch (error) {
                 console.log(error);
-                that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
               }           
         } 
-        else if(param.searchType === 'code') {
-            try {
-                const result = await axios.get(
-                    'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search'
-                );
+        // else if(param.searchType === 'code') {
+        //     try {
+        //         const result = await axios.get(
+        //             'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search'
+        //         );
                 
-                console.log('searchRepo------------' , result.data); 
-                if (result.data.data.length > 0) {
-                    for( const msg of result.data.data) {
-                        const content = `#### ${msg.title} 
-                            ${msg.content}
-                        `;
-                        that.#updateMessage(replyMsgId, msg.content as string);
-                    }   
-                }
-               } catch (error) {
-                console.log(error);
-                that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
-              }           
-        } 
+        //         console.log('searchRepo------------' , result.data); 
+        //         if (result.data.data.length > 0) {
+        //             for( const msg of result.data.data) {
+        //                 const content = `#### ${msg.title} 
+        //                     ${msg.content}
+        //                 `;
+        //                 that.#updateMessage(replyMsgId, msg.content as string);
+        //             }   
+        //         }
+        //        } catch (error) {
+        //         console.log(error);
+        //         that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
+        //       }           
+        // } 
     }
 
     async generateCode(prompt: string): Promise<void> {

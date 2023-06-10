@@ -3,4 +3,8 @@ export interface MessageItemModel {
     contents: string;
     isReply?: boolean;
     isFinished?: boolean;
+    isHtml?: boolean;
+    title?: string;
+    originUrl?: string;
+
 }

@@ -313,3 +313,28 @@ pre .action-code-button {
 .clickable:hover {
     filter: brightness(0.9);
 }
+
+/* htmlView */
+.html-content {
+    margin: 20px 0 8px;
+    font-size: 14px;
+    color: #595959;
+    line-height: 20px;
+}
+
+.title-header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+}
+
+.title-header-a{
+    color: #646464;
+    text-decoration: underline;
+}
+
+.html-content em {
+    color: #f73131;
+}
