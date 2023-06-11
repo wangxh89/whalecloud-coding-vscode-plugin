@@ -21,11 +21,16 @@ export async function chat(
     if (isProcessing) {
         throw new Error("A chat session is in-flight");
     }
+    let filePath = "";
+    let workspaceDirectory = "";
+    let documentText = "";
+    if (document) {
+        filePath = document.uri.fsPath;
+        workspaceDirectory =
+            vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath ?? "";
+        documentText = document.getText();
+    }
 
-    const filePath = document.uri.fsPath;
-    const workspaceDirectory =
-        vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath ?? null;
-    const documentText = document.getText();
 
     const customModelConfig = getCustomModelConfiguration();
 

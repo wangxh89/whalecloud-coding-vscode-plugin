@@ -89,19 +89,6 @@ export class ChatServiceImpl implements IChatService {
     }
 
 
-    // #addHTMLMessage(msg: MessageItemModel): string {
-    //     const id = ++this.#currentMessageId;
-    //     msg.id =`bot:${id}`;
-    //     this.#messages.push(msg);
-    //     this.#messageIndex.set(msg.id, msg);
-
-    //     for (const client of this.#clients) {
-    //         client.handleNewMessage?.call(client, msg);
-    //     }
-
-    //     return msg.id;
-    // }    
-
     #updateMessage(msgId: string, newContents: string, finished?: boolean) {
         const msg = this.#messageIndex.get(msgId);
         if (!msg) {
@@ -135,10 +122,7 @@ export class ChatServiceImpl implements IChatService {
     getActiveEditorSelectText():Promise<string>{
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-            vscode.window.showWarningMessage(
-                "在聊天之前，您必须激活编辑器。"
-            );
-            throw new Error("No active editor");
+            return Promise.resolve("");
         }        
         const { document, selection } = editor;
 
@@ -246,9 +230,14 @@ export class ChatServiceImpl implements IChatService {
     async generateCode(prompt: string): Promise<void> {
         // Get the current editor and selection.
         const editor = vscode.window.activeTextEditor;
+
         if (!editor) {
-            return;
-        }
+            vscode.window.showWarningMessage(
+                "在生成代码之前，您必须激活编辑器。"
+            );
+            throw new Error("No active editor");
+        }                
+
 
         // End the active session first.
         const globalState = getGlobalState();
@@ -276,21 +265,18 @@ export class ChatServiceImpl implements IChatService {
         }
 
         const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showWarningMessage(
-                "在聊天之前，您必须激活编辑器。"
+        let document:vscode.TextDocument;
+        let selectionRange:SelectionRange = new SelectionRange(0,0); 
+        if (editor) {
+            document = editor.document;
+            const selection = editor.selection
+            const selectionStartOffset = document.offsetAt(selection.start);
+            const selectionEndOffset = document.offsetAt(selection.end);
+            selectionRange = new SelectionRange(
+                selectionStartOffset,
+                selectionEndOffset - selectionStartOffset
             );
-            throw new Error("No active editor");
         }
-
-        const { document, selection } = editor;
-
-        const selectionStartOffset = document.offsetAt(selection.start);
-        const selectionEndOffset = document.offsetAt(selection.end);
-        const selectionRange = new SelectionRange(
-            selectionStartOffset,
-            selectionEndOffset - selectionStartOffset
-        );
 
         this.#addMessage({
             id: "",
@@ -341,7 +327,7 @@ export class ChatServiceImpl implements IChatService {
                     // TODO: optimize the display of error message.
                     this.#updateMessage(
                         replyMsgId,
-                        "\n(请求失败，请检查 1. ZCM Key是否填写正确 2. 至dev.iwhalecloud.com 网络连接是否联通 3.重启下vscode)",
+                        "\n(请求失败，请检查 1. ZCM Key是否填写正确 2. 至dev.iwhalecloud.com 网络连接是否联通 3.重启下vscode(防止配置没有生效) ",
                         true
                     );
                 } finally {
