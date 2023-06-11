@@ -143,8 +143,18 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        await chatService.confirmPrompt(prompt, "Freeform");
-        setPrompt("");          
+        const param = {
+            "keyword": prompt, // 搜索内容            
+            "page": "0", // 页数           
+            "pageSize": "10", // 每页数据           
+            "projectCode": "", // 项目ID            
+            "scope": "inner", // 内网数据或者外网数据，现在只支持搜索内网数据            
+            "searchType": "code", // 搜索doc或者code            
+            };
+            
+            await chatService.searchRepo(JSON.stringify(param));
+            
+            setPrompt("");                 
     }, [prompt, setPrompt, setMessages]);
    
     const handleRepoDocAction = useCallback(async () => {
@@ -155,7 +165,7 @@ export function ChatPage() {
             const param = {
             "keyword": prompt, // 搜索内容            
             "page": "0", // 页数           
-            "pageSize": "3", // 每页数据           
+            "pageSize": "10", // 每页数据           
             "projectCode": "", // 项目ID            
             "scope": "inner", // 内网数据或者外网数据，现在只支持搜索内网数据            
             "searchType": "doc", // 搜索doc或者code            
@@ -163,7 +173,7 @@ export function ChatPage() {
             
             await chatService.searchRepo(JSON.stringify(param));
             
-            setPrompt("");        
+            setPrompt("");          
     }, [prompt, setPrompt, setMessages]);    
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
@@ -291,18 +301,20 @@ export function ChatPage() {
                             onKeyDown={repoKeyhandler}
                         />
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", gap:"20px" ,width:"100%"}}>
+                        <VSCodeButton
+                                disabled={!isReady || prompt.length === 0}
+                                onClick={handleRepoDocAction}
+                            >
+                                {'文档库搜索'}
+                            </VSCodeButton>       
+
                             <VSCodeButton
                                 disabled={!isReady || prompt.length === 0}
                                 onClick={handleRepoCodeAction}
                             >
                                 {'代码库搜索'}
                             </VSCodeButton>
-                            <VSCodeButton
-                                disabled={!isReady || prompt.length === 0}
-                                onClick={handleRepoDocAction}
-                            >
-                                {'文档库搜索'}
-                            </VSCodeButton>                            
+
                         </div>
                     </div>
                 </VSCodePanelView>     

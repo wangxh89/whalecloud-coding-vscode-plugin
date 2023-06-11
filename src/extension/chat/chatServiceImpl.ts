@@ -4,6 +4,7 @@ import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
 import { SelectionRange } from "../generate/core";
 import { chat, resetChat } from "./core";
+import { getCustomModelConfiguration } from "../utils";
 import { getGlobalState } from "../globalState";
 import { GenerateSession } from "../generate";
 export interface ChatServiceClient {
@@ -20,6 +21,7 @@ function setHasActiveGenerateSessionContext(value: boolean) {
         value
     );
 }
+
 
 
 export class ChatServiceImpl implements IChatService {
@@ -155,7 +157,7 @@ export class ChatServiceImpl implements IChatService {
         //     contents: "",
         //     isReply: true,
         // });
-
+        const customModelConfig = getCustomModelConfiguration();  
         const that = this;        
         if(param.searchType === 'doc') {
             try {
@@ -163,7 +165,7 @@ export class ChatServiceImpl implements IChatService {
                     method: 'post',
                     url: 'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search',
                     headers: { 
-                      'token': 'dbd58f19645e862d37420f1521b60ce234ab2874', 
+                      'token': customModelConfig?.openaiAPIKey || null, 
                       'Content-Type': 'application/json'
                     },
                     data : param
@@ -183,31 +185,62 @@ export class ChatServiceImpl implements IChatService {
                             isFinished:true
                         });
                     }   
+                } else {
+                    that.#addMessage({
+                        id:"", 
+                        contents: `在研发云文档库中，没有搜索到 \`${param.keyword}\` 的相关记录`, 
+                        isReply: true,
+                        isHtml: false,
+                        isFinished:true
+                    });                    
                 }
                } catch (error) {
                 console.log(error);
               }           
         } 
-        // else if(param.searchType === 'code') {
-        //     try {
-        //         const result = await axios.get(
-        //             'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search'
-        //         );
+        else if(param.searchType === 'code') {
+            try {
+                let config = {
+                    method: 'post',
+                    url: 'https://dev.iwhalecloud.com/portal/zcm-doc/ide/search',
+                    headers: { 
+                      'token': customModelConfig?.openaiAPIKey || null, 
+                      'Content-Type': 'application/json'
+                    },
+                    data : param
+                  };                
+                const result = await axios.request(config);
                 
-        //         console.log('searchRepo------------' , result.data); 
-        //         if (result.data.data.length > 0) {
-        //             for( const msg of result.data.data) {
-        //                 const content = `#### ${msg.title} 
-        //                     ${msg.content}
-        //                 `;
-        //                 that.#updateMessage(replyMsgId, msg.content as string);
-        //             }   
-        //         }
-        //        } catch (error) {
-        //         console.log(error);
-        //         that.#updateMessage(replyMsgId, "搜索研发云文档库失败，打开帮助-》开发者工具 查看详情");
-        //       }           
-        // } 
+                console.log('searchRepo------------' , result.data); 
+                if (result.data.data.length > 0) {
+                    for( const msg of result.data.data) {
+                        // 1. 取出 "title": "bindAggregatedPort - LocalTrsByUtnService.java", 的语言
+                        const title = msg.title as string;
+
+                        const ext = title.substring(title.indexOf(".") + 1);
+                        const content = "### " + msg.title + " \r\n ```" + ext + "\r\n" +  msg.content + "\r\n ```";
+                        console.warn("searchRepo code :", content);
+                        that.#addMessage({
+                            id:"", 
+                            contents: content, 
+                            isReply: true,
+                            isHtml: false,
+                            isFinished:true
+                        });
+                    }   
+                } else {
+                    that.#addMessage({
+                        id:"", 
+                        contents: `在研发云代码库中，没有搜索到 \`${param.keyword}\` 的相关记录`, 
+                        isReply: true,
+                        isHtml: false,
+                        isFinished:true
+                    }); 
+                }
+               } catch (error) {
+                console.log(error);
+              }           
+        } 
     }
 
     async generateCode(prompt: string): Promise<void> {
