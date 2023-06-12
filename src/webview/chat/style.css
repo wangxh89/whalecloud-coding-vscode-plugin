@@ -317,16 +317,16 @@ pre .action-code-button {
 /* htmlView */
 .html-content {
     margin: 20px 0 8px;
-    font-size: 14px;
+    font-size: 12px;
     color: #595959;
-    line-height: 20px;
+    line-height: 18px;
 }
 
 .title-header {
     margin-top: 20px;
     margin-bottom: 10px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
 }
 

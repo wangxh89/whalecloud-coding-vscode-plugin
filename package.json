@@ -2,11 +2,11 @@
     "name": "whalecloud-coding-vscode-plugin",
     "displayName": "浩鲸智能编程助手（WhaleCloud Coding Plus）",
     "description": "浩鲸智能编程助手（WhaleCloud Coding Plus） for Visual Studio Code",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "publisher": "tigerwong",
     "repository": {
         "type": "git",
-        "url": "https://github.com/wangxh89/whalecloud-coding-vscode-plugin"
+        "url": ""
     },
     "icon": "icon.png",
     "engines": {
@@ -52,7 +52,7 @@
                 "command": "whalecloud.resetChat",
                 "title": "Reset Chat",
                 "category": "WhaleCloud",
-                "icon": "$(clear-all)"
+                "icon": "$(sync)"
             },
             {
                 "command": "whalecloud.signInUp",
