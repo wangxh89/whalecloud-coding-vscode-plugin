@@ -1,6 +1,6 @@
-use serde::{Serialize, Serializer};
-
 use crate::GenerateInput;
+use node_bridge::prelude::*;
+use serde::{Serialize, Serializer};
 
 use super::{bot_message::BotMessage, user_message::UserMessage, UserRequest};
 
@@ -34,6 +34,8 @@ pub struct RequestBody {
     #[serde(rename = "customModel", skip_serializing_if = "Option::is_none")]
     pub gpt_model: Option<String>,
 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from_source: Option<String>,
     /// Allow Cursor to use code snippets for product improvements.
     #[serde(rename = "noStorageMode", serialize_with = "serialize_invert_bool")]
     pub telemetry: bool,
@@ -62,11 +64,20 @@ impl RequestBody {
             root_path: root_path.unwrap_or_default(),
             api_key,
             gpt_model,
+            from_source: Some(String::from("vscode")),
             telemetry: true,
         }
     }
 
     pub fn new_with_input(input: &GenerateInput, message_type: MessageType) -> Self {
+        #[cfg(debug_assertions)]
+        console::log_str(
+            format!(
+                "RequestBody  new_with_input api_key ============{:?}----end",
+                input.api_key()
+            )
+            .as_str(),
+        );
         Self::new(
             UserRequest::new_with_input(input, message_type),
             vec![],

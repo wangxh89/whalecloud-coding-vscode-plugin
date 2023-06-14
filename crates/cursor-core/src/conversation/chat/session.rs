@@ -33,6 +33,7 @@ impl Session {
                 .take()
                 .map(|mut r| {
                     r.user_request = UserRequest::new_with_input(input, message_type);
+                    r.api_key = input.api_key();
                     r
                 })
                 .unwrap_or_else(|| RequestBody::new_with_input(input, message_type)),
