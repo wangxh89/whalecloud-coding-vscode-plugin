@@ -41,38 +41,46 @@ export function MessageItem(props: MessageItemProps) {
 export function PreCode(props: { children: any }) {
     const ref = useRef<HTMLPreElement>(null);
     const handleCopyAction = (code: string) => {
-        navigator.clipboard.writeText(code);
+        const insertText = "Insert\n"
+        const cpText = code.substring(code.indexOf(insertText)+insertText.length);
+        navigator.clipboard.writeText(cpText);
     };
     const handleInsertCodeSnippetAction = async (code: string) => {
+        const insertText = "Insert\n"
+        const insertCode = code.substring(code.indexOf(insertText)+insertText.length);        
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );
-        await chatService.insertCodeSnippet(code);
+        await chatService.insertCodeSnippet(insertCode);
     };
     return (
       <pre ref={ref}>
         <div className="action-btns">
-            <span
-            className="codicon codicon-copy action-code-button"
-            title="Copy"
-            onClick={() => {
-                if (ref.current) {
-                  const code = ref.current.innerText;
-                  handleCopyAction(code);
-                }}
-            }>
-            </span>
-            <span
-            className="codicon codicon-insert action-code-button"
-            title="Insert Or Replace"
-            onClick={() => {
-                if (ref.current) {
-                  const code = ref.current.innerText;
-                  handleInsertCodeSnippetAction(code);
-                }}
-            }
-            ></span>
-        </div>
+                <span
+                className="codicon codicon-copy action-code-button"
+                style={{fontSize: "12px"}}
+                title="Copy"
+                onClick={() => {
+                    if (ref.current) {
+                    const code = ref.current.innerText;
+                    console.log("action-btns--------------",code)
+                    handleCopyAction(code);
+                    }}
+                }>Copy
+                </span>
+                <span
+                className="codicon codicon-insert action-code-button"
+                style={{fontSize: "12px"}}
+                title="Insert Or Replace"
+                onClick={() => {
+                    if (ref.current) {
+                    const code = ref.current.innerText;
+                    console.log("action-btns----------------",code);
+                    handleInsertCodeSnippetAction(code);
+                    }}
+                }
+                >Insert</span>
+            </div>         
         {props.children}
       </pre>
     );

@@ -5,8 +5,10 @@ import {
 import { MessageItemModel } from "../../common/chatService/model";
 
 export class ChatViewServiceImpl implements IChatViewService {
+
     setIsReadyAction: ((isReady: boolean) => void) | null = null;
     setHasSelectionAction: ((hasSelection: boolean) => void) | null = null;
+    setSelectTextAction: ((selectText: string) => void) | null = null;
     addMessageAction: ((msg: MessageItemModel) => void) | null = null;
     updateMessageAction: ((msg: MessageItemModel) => void) | null = null;
     clearMessageAction: (() => void) | null = null;
@@ -22,6 +24,10 @@ export class ChatViewServiceImpl implements IChatViewService {
     async setHasSelection(hasSelection: boolean): Promise<void> {
         this.setHasSelectionAction?.call(null, hasSelection);
     }
+
+    async setSelectText(selectText: string): Promise<void> {
+        this.setSelectTextAction?.call(null, selectText);
+    }    
 
     async addMessage(msg: MessageItemModel): Promise<void> {
         this.addMessageAction?.call(null, msg);

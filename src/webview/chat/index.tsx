@@ -8,7 +8,8 @@ import {
     useMemo,
 } from "react";
 import { VSCodeButton, VSCodeTextArea, VSCodePanels, VSCodePanelTab, VSCodePanelView } from "@vscode/webview-ui-toolkit/react";
-
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import "./style.css";
 import { MessageItem } from "./MessageItem";
 import { ChatViewServiceImpl } from "./chatViewServiceImpl";
@@ -69,6 +70,7 @@ export function ChatPage() {
     const [hasSelection, setHasSelection] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [prompt, setPrompt] = useState("");
+    const [selectText, setSelectText] = useState("");
     // const [contextSelect, setContextSelect] = useState('');
     const [autoScrollFlag, setAutoScrollFlag] = useState(AUTO_SCROLL_FLAG_NONE);
     const chatListRef = useRef<HTMLDivElement>(null);
@@ -90,6 +92,11 @@ export function ChatPage() {
         setMessages([]);
     }, []);
 
+    const setSelectTextAction = useCallback((selectText:string) => {
+        console.warn("setSelectTextAction-------",  selectText)
+        setSelectText(selectText);
+    }, []);
+
     // const contextIfSelect = async () => {
     //     const context = selectContext();
     //     if (context) {
@@ -104,6 +111,7 @@ export function ChatPage() {
         );
         await chatService.confirmPrompt(prompt, "Freeform");
         setPrompt("");
+        setHasSelection(false);
     }, [prompt, setPrompt, setMessages]);
 
 
@@ -120,7 +128,7 @@ export function ChatPage() {
         const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you ${require} for this code? ${retPrompt}`;
         await chatService.confirmPrompt(strPrompt, "Custom");
         setPrompt("");
-        // setContextSelect('');            
+        setHasSelection(false);        
     }, [prompt, setPrompt, setMessages]);
 
     const handleGenVarAction = useCallback(async () => {
@@ -211,6 +219,7 @@ export function ChatPage() {
         viewServiceImpl.addMessageAction = addMessageAction;
         viewServiceImpl.updateMessageAction = updateMessageAction;
         viewServiceImpl.clearMessageAction = clearMessageAction;
+        viewServiceImpl.setSelectTextAction = setSelectTextAction;
         serviceManager.registerService(viewServiceImpl);
 
         serviceManager
@@ -235,54 +244,76 @@ export function ChatPage() {
                 <VSCodePanelTab id="genVar">命名</VSCodePanelTab>
                 <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>                
 
-                <VSCodePanelView id="AI">
-                    <div className="chat-input-area chat-input-area-ai">
-                        <VSCodeTextArea
-                            rows={3}
-                            placeholder={`Talk about the ${
-                                hasSelection ? "selected contents" : "whole document"
-                            }...`}
-                            disabled={!isReady}
-                            value={prompt}
-                            onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                                setPrompt(e.target.value);
-                            }}
-                            onKeyDown={confirmShortcut.keyDownHandler}
-                        />
-                        <VSCodeButton
-                            disabled={!isReady || prompt.length === 0}
-                            onClick={handleAskAction}
-                        >
-                            {`提问 (${confirmShortcut.label})`}
-                        </VSCodeButton>
-                    </div>
-                    <div className="chat-icon-area">
-                        <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('add unit tests')}>
-                            <span>测</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('transform Unicode')}>
-                            <span className="icon-unicode" style={{lineHeight:"32px", height:"32px"}}></span>
-                        </div>
-                        <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('add Chinese code comment')}>
-                            <span>/*/</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('do code refactoring')}>
-                            <span>构</span>
+                <VSCodePanelView id="AI" >
+                    <div style={{display:"flex",  width:"100%", flexDirection: "column"}}>
+                        { hasSelection ?
+                            <div className="chat-select-text-float">
+                                <SyntaxHighlighter
+                                    style={vscDarkPlus}
+                                    codeTagProps={{ style: {maxHeight: "200px"} }}
+                                    language="javascript"
+                                    customStyle={{ background:"#1a1b26", color: "#cbd2ea"}}
+                                >
+                                    {selectText}
+                                </SyntaxHighlighter>
+                                <span role="img" aria-label="close-circle" className="chat-select-text-close clickable" onClick={() => setHasSelection(false)}>
+                                    <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                        <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </div>  : null        
+                        }
+                        <div style={{display:"flex", width:"100%"}}>
+                            <div className="chat-input-area chat-input-area-ai">
+                                <VSCodeTextArea
+                                    rows={3}
+                                    placeholder={`Talk about the ${
+                                        hasSelection ? "selected contents" : "whole document"
+                                    }...`}
+                                    disabled={!isReady}
+                                    value={prompt}
+                                    onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                                        setPrompt(e.target.value);
+                                    }}
+                                    onKeyDown={confirmShortcut.keyDownHandler}
+                                />
+                                <VSCodeButton
+                                    disabled={!isReady || prompt.length === 0}
+                                    onClick={handleAskAction}
+                                >
+                                    {`提问 (${confirmShortcut.label})`}
+                                </VSCodeButton>
                             </div>
-                        <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('interpretive code')}>
-                            <span>释</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('translate into Chinese')}>
-                            <span>译</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('write regular expressions')}>
-                            <span>则</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('analysis')}>
-                            <span>析</span>
-                        </div>
-                        <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('add code example')}>
-                            <span>例</span>
+                            <div className="chat-icon-area">
+                                <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('add unit tests')}>
+                                    <span>测</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('transform Unicode')}>
+                                    <span>码</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('add Chinese code comment')}>
+                                    <span>注</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('do code refactoring')}>
+                                    <span>构</span>
+                                    </div>
+                                <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('interpretive code')}>
+                                    <span>释</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('translate into Chinese')}>
+                                    <span>译</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('write regular expressions')}>
+                                    <span>则</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('analysis')}>
+                                    <span>析</span>
+                                </div>
+                                <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('add code example')}>
+                                    <span>例</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </VSCodePanelView>

@@ -56,6 +56,12 @@ export class ChatPanelProvider
                         CHAT_VIEW_SERVICE_NAME
                     );
                 await chatViewService.setHasSelection(hasSelection);
+                
+                if (hasSelection) {
+                    const selectText = e.textEditor.document.getText(e.selections[0]);
+                    await chatViewService.setSelectText(selectText);
+                } 
+                
             }
         );
 

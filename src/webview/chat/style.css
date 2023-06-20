@@ -128,7 +128,8 @@ pre {
 pre .action-btns {
     display: flex;
     justify-content: flex-end;
-    margin-top: 5px
+    margin-top: 5px;
+    margin-bottom: -14px;
 }
 
 pre:hover .action-code-button {
@@ -140,7 +141,7 @@ pre:hover .action-code-button {
 pre .action-code-button {
     margin-right: 5px;
     cursor: pointer;
-    padding: 0px 5px;
+    padding: 0px 5px 5px 3px;
     background-color: rgb(187, 187, 187);
     color: rgb(30, 30, 30);
     border: 1px solid rgb(222, 222, 222);
@@ -185,13 +186,13 @@ pre .action-code-button {
 
 /* AI对话-9宫格图标区域-图标 */
 .chat-input-action {
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.192);
     background-color: rgb(30, 30, 30);
-    border-radius: 10px;
+    border-radius: 5px;
     color: rgb(187, 187, 187);
     animation: slide-in ease 0.3s;
     box-shadow: 0px 2px 4px 0px rgb(0, 0, 0, 0.05);
@@ -337,4 +338,18 @@ pre .action-code-button {
 
 .html-content em {
     color: #f73131;
+}
+
+.chat-select-text-float {
+    position: relative; 
+    width: 100%; 
+    background-color: rgb(41, 41, 41); 
+    border-radius: 6px 6px 0px 0px; 
+    overflow: hidden;
+}
+.chat-select-text-close {
+    position: absolute; 
+    top: 10px; 
+    right: 15px; 
+    font-size: 14px;
 }

@@ -17,6 +17,7 @@ export const CHAT_VIEW_SERVICE_NAME = "chat_view";
 export interface IChatViewService extends IService {
     setIsBusy(isBusy: boolean): Promise<void>;
     setHasSelection(hasSelection: boolean): Promise<void>;
+    setSelectText(selectText: string): Promise<void>;
     addMessage(msg: MessageItemModel): Promise<void>;
     updateMessage(msg: MessageItemModel): Promise<void>;
     clearMessage(): Promise<void>;
