@@ -12,6 +12,15 @@ pub enum MessageType {
     Freeform,
     Custom,
     GenVar,
+    W01,
+    W02,
+    W03,
+    W04,
+    W05,
+    W06,
+    W07,
+    W08,
+    W09,
 }
 
 #[derive(Debug, Serialize, Clone)]

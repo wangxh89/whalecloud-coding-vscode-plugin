@@ -1,10 +1,10 @@
 import { IService } from "../ipc";
-import { MessageItemModel } from "./model";
+import { MessageItemModel, ConfirmPromptModel } from "./model";
 
 export const CHAT_SERVICE_NAME = "whalecloudchatview";
 
 export interface IChatService extends IService {
-    confirmPrompt(prompt: string, msgType: string): Promise<void>;
+    confirmPrompt(confirmPrompt: ConfirmPromptModel): Promise<void>;
     syncState(): Promise<void>;
     insertCodeSnippet(contents: string): Promise<void>;
     generateCode(prompt: string): Promise<void>;

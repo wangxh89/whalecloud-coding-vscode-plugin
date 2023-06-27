@@ -35,6 +35,10 @@ const extensionConfig = {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"],
             },
+            {
+                test: /\.svg$/,
+                loader: "svg-inline-loader",
+            },
         ],
     },
     devtool: "nosources-source-map",

@@ -182,6 +182,7 @@
         "glob": "^8.1.0",
         "mocha": "^10.2.0",
         "style-loader": "^3.3.2",
+        "svg-inline-loader": "^0.8.2",
         "ts-loader": "^9.4.2",
         "typescript": "^4.9.5",
         "webpack": "^5.75.0",
@@ -190,6 +191,7 @@
     "dependencies": {
         "@vscode/codicons": "^0.0.32",
         "@vscode/webview-ui-toolkit": "^1.2.2",
+        "axios": "^1.4.0",
         "diff-match-patch": "^1.0.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -200,7 +202,6 @@
         "remark-breaks": "^3.0.2",
         "remark-gfm": "^3.0.1",
         "remark-math": "^5.1.1",
-        "uuid": "^9.0.0",
-        "axios": "^1.4.0"
+        "uuid": "^9.0.0"
     }
 }

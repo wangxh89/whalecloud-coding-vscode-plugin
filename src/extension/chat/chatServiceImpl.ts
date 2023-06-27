@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import axios from "axios";
 import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
-import { MessageItemModel } from "../../common/chatService/model";
+import { MessageItemModel, ConfirmPromptModel } from "../../common/chatService/model";
 import { SelectionRange } from "../generate/core";
 import { chat, resetChat } from "./core";
 import { getCustomModelConfiguration } from "../utils";
@@ -156,7 +156,6 @@ export class ChatServiceImpl implements IChatService {
                   };                
                 const result = await axios.request(config);
                 
-                console.log('searchRepo------------' , result.data); 
                 if (result.data.data.length > 0) {
                     for( const msg of result.data.data) {
                         that.#addMessage({
@@ -195,7 +194,7 @@ export class ChatServiceImpl implements IChatService {
                   };                
                 const result = await axios.request(config);
                 
-                console.log('searchRepo------------' , result.data); 
+                
                 if (result.data.data.length > 0) {
                     for( const msg of result.data.data) {
                         // 1. 取出 "title": "bindAggregatedPort - LocalTrsByUtnService.java", 的语言
@@ -257,7 +256,7 @@ export class ChatServiceImpl implements IChatService {
         setHasActiveGenerateSessionContext(true);        
     }
 
-    async confirmPrompt(prompt: string, msgType: string): Promise<void> {
+    async confirmPrompt(confirmPrompt: ConfirmPromptModel): Promise<void> {
         if (this.#currentAbortController) {
             // TODO: optimize the UX.
             console.warn("A chat session is in-flight");
@@ -277,10 +276,10 @@ export class ChatServiceImpl implements IChatService {
                 selectionEndOffset - selectionStartOffset
             );
         }
-
+        const contents = confirmPrompt.displayMsg ? confirmPrompt.displayMsg: confirmPrompt.prompt;
         this.#addMessage({
             id: "",
-            contents: prompt,
+            contents,
         });
         const replyMsgId = this.#addMessage({
             id: "",
@@ -315,8 +314,8 @@ export class ChatServiceImpl implements IChatService {
 
                 try {
                     await chat(
-                        prompt,
-                        msgType,                        
+                        confirmPrompt.prompt,
+                        confirmPrompt.msgType,                        
                         document,
                         selectionRange,
                         abortController.signal,

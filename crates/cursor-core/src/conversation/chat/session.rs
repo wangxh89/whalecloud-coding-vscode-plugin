@@ -25,6 +25,15 @@ impl Session {
             "Custom" => MessageType::Custom,
             "Generate" => MessageType::Generate,
             "GenVar" => MessageType::GenVar,
+            "w-01" => MessageType::W01,
+            "w-02" => MessageType::W02,
+            "w-03" => MessageType::W03,
+            "w-04" => MessageType::W04,
+            "w-05" => MessageType::W05,
+            "w-06" => MessageType::W06,
+            "w-07" => MessageType::W07,
+            "w-08" => MessageType::W08,
+            "w-09" => MessageType::W09,
             _ => MessageType::Custom,
         };
 

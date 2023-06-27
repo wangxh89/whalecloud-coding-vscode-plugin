@@ -163,7 +163,7 @@ pre .action-code-button {
     flex-direction: column;
     width: 100%;
     row-gap: 6px;
-    padding: 12px 16px;
+    padding: 12px 16px 12px 0px;
     border-top: 1px solid var(--vscode-notebook-cellToolbarSeparator);
 }
 

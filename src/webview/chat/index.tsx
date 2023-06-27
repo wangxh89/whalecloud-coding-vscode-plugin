@@ -15,7 +15,7 @@ import { MessageItem } from "./MessageItem";
 import { ChatViewServiceImpl } from "./chatViewServiceImpl";
 import { getServiceManager } from "../../common/ipc/webview";
 import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
-import { MessageItemModel } from "../../common/chatService/model";
+import { MessageItemModel, ConfirmPromptModel } from "../../common/chatService/model";
 
 function messagesWithUpdatedBotMessage(
     msgs: MessageItemModel[],
@@ -93,7 +93,6 @@ export function ChatPage() {
     }, []);
 
     const setSelectTextAction = useCallback((selectText:string) => {
-        console.warn("setSelectTextAction-------",  selectText)
         setSelectText(selectText);
     }, []);
 
@@ -109,24 +108,30 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );
-        await chatService.confirmPrompt(prompt, "Freeform");
+
+        const confPrompt:ConfirmPromptModel = {
+            prompt,
+            msgType:"Freeform"
+        };
+
+        await chatService.confirmPrompt(confPrompt);
         setPrompt("");
         setHasSelection(false);
     }, [prompt, setPrompt, setMessages]);
 
 
-    const handleCustom = useCallback(async (require: String) => {
+    const handleCustom = useCallback(async (msgType: string, displayMsg?: string) => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );  
-        let retPrompt = prompt; 
-        if (prompt.trim() === "") {
-            retPrompt = await chatService.getActiveEditorSelectText();
-            console.log("----------------------------------", retPrompt);
-        }
 
-        const strPrompt = `你是一个中文助手，请用中文回答我所有问题。 Can you ${require} for this code? ${retPrompt}`;
-        await chatService.confirmPrompt(strPrompt, "Custom");
+        const confPrompt:ConfirmPromptModel = {
+            prompt,
+            msgType,
+            displayMsg
+        };        
+        
+        await chatService.confirmPrompt(confPrompt);
         setPrompt("");
         setHasSelection(false);        
     }, [prompt, setPrompt, setMessages]);
@@ -135,7 +140,11 @@ export function ChatPage() {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
         );   
-        await chatService.confirmPrompt(prompt, "GenVar");
+        const confPrompt:ConfirmPromptModel = {
+            prompt,
+            msgType:"GenVar"
+        };        
+        await chatService.confirmPrompt(confPrompt);
         setPrompt("");          
     }, [prompt, setPrompt, setMessages]);
     
@@ -238,13 +247,13 @@ export function ChatPage() {
                 })}
             </div>
             
-            <VSCodePanels>
-                <VSCodePanelTab id="AI">问答</VSCodePanelTab>
+            <VSCodePanels style={{paddingLeft: "14px"}}>
+                <VSCodePanelTab id="AI" >问答</VSCodePanelTab>
                 <VSCodePanelTab id="search">搜索</VSCodePanelTab>
                 <VSCodePanelTab id="genVar">命名</VSCodePanelTab>
                 <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>                
 
-                <VSCodePanelView id="AI" >
+                <VSCodePanelView id="AI" style={{paddingLeft: "0px"}}>
                     <div style={{display:"flex",  width:"100%", flexDirection: "column"}}>
                         { hasSelection ?
                             <div className="chat-select-text-float">
@@ -286,31 +295,37 @@ export function ChatPage() {
                                 </VSCodeButton>
                             </div>
                             <div className="chat-icon-area">
-                                <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('add unit tests')}>
+                                {/* Can you add tests for this code? */}
+                                <div className="chat-input-action clickable" title="单元测试" onClick={() => handleCustom('w-01', "你能为这个代码添加测试吗？")}>
                                     <span>测</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('transform Unicode')}>
+                                <div className="chat-input-action clickable" title="转Unicode" onClick={() => handleCustom('w-02', "转unicode编码")}>
                                     <span>码</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('add Chinese code comment')}>
+
+                                <div className="chat-input-action clickable" title="添加中文注释" onClick={() => handleCustom('w-03', "你能为这个代码增加中文注释吗？")}>
                                     <span>注</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('do code refactoring')}>
+                                {/* Can you refactor this code and explain what's changed? */}
+                                <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('w-04', "你能重构这个代码并解释一下发生了什么变化吗？")}>
                                     <span>构</span>
                                     </div>
-                                <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('interpretive code')}>
+                                    {/* Can you explain what this code does? */}
+                                <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('w-05', "你能解释一下这个代码的作用吗？")}>
                                     <span>释</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('translate into Chinese')}>
+                                 {/* Translate the following content to 中文(简体) language: */}
+                                <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('w-06', "将以下内容翻译成中文(简体)")}>
                                     <span>译</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('write regular expressions')}>
+                                <div className="chat-input-action clickable" title="正则表达式" onClick={() => handleCustom('w-07', "编写正则表达式")}>
                                     <span>则</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('analysis')}>
+                                {/* Why is this code broken? */}
+                                <div className="chat-input-action clickable" title="问题分析" onClick={() => handleCustom('w-08', "这段代码有什么问题?")}>
                                     <span>析</span>
                                 </div>
-                                <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('add code example')}>
+                                <div className="chat-input-action clickable" title="代码示例" onClick={() => handleCustom('w-09', "帮这段代码添加使用的示例")}>
                                     <span>例</span>
                                 </div>
                             </div>
@@ -373,24 +388,46 @@ export function ChatPage() {
                 </VSCodePanelView>     
                 
                 <VSCodePanelView id="genCode">
-                    <div className="chat-input-area">
-                        <VSCodeTextArea
-                            style={{ width: "100%" }}
-                            rows={3}
-                            placeholder={`请选中右侧编辑器代码，输入要修改的提示语。或者直接输入要生成的代码提示语,`}
-                            disabled={!isReady}
-                            value={prompt}
-                            onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                                setPrompt(e.target.value);
-                            }}
-                            onKeyDown={confirmGenCode.keyDownHandler}
-                        />
-                        <VSCodeButton
-                            disabled={!isReady || prompt.length === 0}
-                            onClick={handleGenCodeAction}
-                        >
-                            {`生成、修改代码 (${confirmGenCode.label})`}
-                        </VSCodeButton>
+                    <div style={{display:"flex",  width:"100%", flexDirection: "column"}}>
+                        { hasSelection ?
+                            <div className="chat-select-text-float">
+                                <SyntaxHighlighter
+                                    style={vscDarkPlus}
+                                    codeTagProps={{ style: {maxHeight: "200px"} }}
+                                    language="javascript"
+                                    customStyle={{ background:"#1a1b26", color: "#cbd2ea"}}
+                                >
+                                    {selectText}
+                                </SyntaxHighlighter>
+                                <span role="img" aria-label="close-circle" className="chat-select-text-close clickable" onClick={() => setHasSelection(false)}>
+                                    <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                        <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </div>  : null        
+                        }
+                        <div style={{display:"flex", width:"100%"}}>                    
+                            <div className="chat-input-area">
+                                <VSCodeTextArea
+                                    style={{ width: "100%" }}
+                                    rows={3}
+                                    placeholder={`请选中右侧编辑器代码，输入要修改的提示语。或者直接输入要生成的代码提示语,`}
+                                    disabled={!isReady}
+                                    value={prompt}
+                                    onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                                        setPrompt(e.target.value);
+                                    }}
+                                    onKeyDown={confirmGenCode.keyDownHandler}
+                                />
+                                <VSCodeButton
+                                    disabled={!isReady || prompt.length === 0}
+                                    onClick={handleGenCodeAction}
+                                >
+                                    {`生成、修改代码 (${confirmGenCode.label})`}
+                                </VSCodeButton>
+                            </div>
+                        </div>
                     </div>
                 </VSCodePanelView>                                                
             </VSCodePanels>

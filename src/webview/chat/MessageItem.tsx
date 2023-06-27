@@ -7,7 +7,7 @@ import RemarkBreaks from "remark-breaks";
 import RehypeKatex from "rehype-katex";
 import RemarkGfm from "remark-gfm";
 import RehypeHighlight from "rehype-highlight";
-
+import { showToast } from "../component/ui-lib";
 import { MessageItemModel } from "../../common/chatService/model";
 import { IndeterminateProgressBar } from "./IndeterminateProgressBar";
 import { getServiceManager } from "../../common/ipc/webview";
@@ -44,6 +44,7 @@ export function PreCode(props: { children: any }) {
         const insertText = "Insert\n"
         const cpText = code.substring(code.indexOf(insertText)+insertText.length);
         navigator.clipboard.writeText(cpText);
+        showToast("已复制到剪贴板中");
     };
     const handleInsertCodeSnippetAction = async (code: string) => {
         const insertText = "Insert\n"
@@ -103,7 +104,7 @@ function MessageTextView(props: MessageTextViewProps) {
                 [
                     RehypeHighlight,
                     {
-                    detect: false,
+                    detect: true,
                     ignoreMissing: true,
                     },
                 ],

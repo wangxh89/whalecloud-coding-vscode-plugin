@@ -8,3 +8,8 @@ export interface MessageItemModel {
     originUrl?: string;
 
 }
+export interface ConfirmPromptModel {
+    prompt: string, 
+    msgType: string,
+    displayMsg?:string
+}
