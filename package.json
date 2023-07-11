@@ -2,7 +2,7 @@
     "name": "whalecloud-coding-vscode-plugin",
     "displayName": "浩鲸智能编程助手（WhaleCloud Coding Plus）",
     "description": "浩鲸智能编程助手（WhaleCloud Coding Plus） for Visual Studio Code",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "publisher": "tigerwong",
     "repository": {
         "type": "git",
@@ -19,6 +19,7 @@
         "whalecloud"
     ],
     "activationEvents": [
+        "onStartupFinished",
         "onCommand:*"
     ],
     "main": "./dist/extension.js",
@@ -202,6 +203,7 @@
         "remark-breaks": "^3.0.2",
         "remark-gfm": "^3.0.1",
         "remark-math": "^5.1.1",
+        "simple-git": "^3.19.1",
         "uuid": "^9.0.0"
     }
 }
