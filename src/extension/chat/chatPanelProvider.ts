@@ -8,6 +8,7 @@ import {
     CHAT_VIEW_SERVICE_NAME,
 } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
+import { Logger } from "../logger";
 
 export class ChatPanelProvider
     implements vscode.WebviewViewProvider, ChatServiceClient
@@ -15,11 +16,13 @@ export class ChatPanelProvider
     static readonly viewType = "whalecloudchatview";
 
     #view: vscode.WebviewView | null = null;
+    #logger:Logger;
     #extensionContext: vscode.ExtensionContext;
     #serviceManager: ExtensionHostServiceManager | null = null;
 
-    constructor(extensionContext: vscode.ExtensionContext) {
+    constructor(extensionContext: vscode.ExtensionContext, logger:Logger) {
         this.#extensionContext = extensionContext;
+        this.#logger = logger;
     }
 
     resolveWebviewView(
@@ -41,7 +44,7 @@ export class ChatPanelProvider
             baseUri
         );
 
-        const chatService = sharedChatServiceImpl();
+        const chatService = sharedChatServiceImpl(this.#logger);
         chatService.attachClient(this);
 
         const serviceManager = new ExtensionHostServiceManager(webview);

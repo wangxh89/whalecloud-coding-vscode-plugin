@@ -2,7 +2,7 @@
     "name": "whalecloud-coding-vscode-plugin",
     "displayName": "浩鲸智能编程助手（WhaleCloud Coding Plus）",
     "description": "浩鲸智能编程助手（WhaleCloud Coding Plus） for Visual Studio Code",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "publisher": "tigerwong",
     "repository": {
         "type": "git",
@@ -74,6 +74,16 @@
                 "command": "whalecloud.generateProject",
                 "title": "Generate Project",
                 "enablement": "workspaceFolders != null && workspaceFolderCount > 0",
+                "category": "WhaleCloud"
+            },
+            {
+                "command": "whalecloud.ShowLogs",
+                "title": "显示日志面板",
+                "category": "WhaleCloud"
+            },
+            {
+                "command": "whalecloud.OpenLogFolder",
+                "title": "打开日志文件",
                 "category": "WhaleCloud"
             }
         ],
@@ -194,6 +204,7 @@
         "@vscode/webview-ui-toolkit": "^1.2.2",
         "axios": "^1.4.0",
         "diff-match-patch": "^1.0.5",
+        "lowlight": "^2.9.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-markdown": "^8.0.6",

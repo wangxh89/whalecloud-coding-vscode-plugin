@@ -7,6 +7,7 @@ import { chat, resetChat } from "./core";
 import { getCustomModelConfiguration } from "../utils";
 import { getGlobalState } from "../globalState";
 import { GenerateSession } from "../generate";
+import { Logger } from "../logger";
 export interface ChatServiceClient {
     handleReadyStateChange?: (isReady: boolean) => void;
     handleNewMessage?: (msg: MessageItemModel) => void;
@@ -31,6 +32,14 @@ export class ChatServiceImpl implements IChatService {
     #clients = new Set<ChatServiceClient>();
     #currentAbortController: AbortController | null = null;
     #clearSessionScheduled = false;
+    #logger:Logger;
+
+    /**
+     * 
+     */
+    constructor(logger:Logger) {
+        this.#logger = logger;
+    }
 
     get name(): string {
         return CHAT_SERVICE_NAME;
@@ -153,10 +162,11 @@ export class ChatServiceImpl implements IChatService {
                       'Content-Type': 'application/json'
                     },
                     data : param
-                  };                
+                  };          
+                this.#logger.writeVerbose(`---文档库搜索---开始， 接口：zcm-doc/ide/search；参数：${prompt}; token:${customModelConfig?.openaiAPIKey}`);     
                 const result = await axios.request(config);
-                
-                if (result.data.data.length > 0) {
+                this.#logger.writeVerbose(`---文档库搜索---结果result.data， ${JSON.stringify(result.data)}`); 
+                if (result?.data?.data?.length > 0) {
                     for( const msg of result.data.data) {
                         that.#addMessage({
                             id:"", 
@@ -178,7 +188,16 @@ export class ChatServiceImpl implements IChatService {
                     });                    
                 }
                } catch (error) {
-                console.log(error);
+                this.#logger.writeError(`---文档库搜索---失败， ${error}`); 
+                this.#addMessage({
+                    id:"", 
+                    contents:`### 搜索失败(${error}) 
+* 使用助手时需要配置正确的Access Token（设置->扩展->浩鲸智能编程助手）。[如何获取Access Token](https://dev.iwhalecloud.com/doc/bidnk4/didq4Dt5ez)
+* 检查至 [dev.iwhalecloud.com](https://dev.iwhalecloud.com) 网络连接是否联通 
+* 重启下vscode(防止配置没有生效) `,
+                    isHtml: false,
+                    isFinished:true
+               });                   
               }           
         } 
         else if(param.searchType === 'code') {
@@ -191,18 +210,18 @@ export class ChatServiceImpl implements IChatService {
                       'Content-Type': 'application/json'
                     },
                     data : param
-                  };                
+                  };      
+                this.#logger.writeVerbose(`---代码库搜索---开始， 接口：zcm-doc/ide/search；参数：${prompt}; token:${customModelConfig?.openaiAPIKey}`);              
                 const result = await axios.request(config);
                 
-                
-                if (result.data.data.length > 0) {
+                this.#logger.writeVerbose(`---代码库搜索---结果result.data， ${JSON.stringify(result.data)}`); 
+                if (result?.data?.data?.length > 0) {
                     for( const msg of result.data.data) {
                         // 1. 取出 "title": "bindAggregatedPort - LocalTrsByUtnService.java", 的语言
                         const title = msg.title as string;
 
                         const ext = title.substring(title.indexOf(".") + 1);
                         const content = "### " + msg.title + " \r\n ```" + ext + "\r\n" +  msg.content + "\r\n ```";
-                        console.warn("searchRepo code :", content);
                         that.#addMessage({
                             id:"", 
                             contents: content, 
@@ -221,7 +240,16 @@ export class ChatServiceImpl implements IChatService {
                     }); 
                 }
                } catch (error) {
-                console.log(error);
+                this.#logger.writeError(`---代码库搜索---失败， ${error}`);
+                this.#addMessage({
+                    id:"", 
+                    contents:`### 搜索失败(${error}) 
+* 使用助手时需要配置正确的Access Token（设置->扩展->浩鲸智能编程助手）。[如何获取Access Token](https://dev.iwhalecloud.com/doc/bidnk4/didq4Dt5ez)
+* 检查至 [dev.iwhalecloud.com](https://dev.iwhalecloud.com) 网络连接是否联通 
+* 重启下vscode(防止配置没有生效) `,
+                    isHtml: false,
+                    isFinished:true
+               });                
               }           
         } 
     }
@@ -259,10 +287,10 @@ export class ChatServiceImpl implements IChatService {
     async confirmPrompt(confirmPrompt: ConfirmPromptModel): Promise<void> {
         if (this.#currentAbortController) {
             // TODO: optimize the UX.
-            console.warn("A chat session is in-flight");
+            this.#logger.writeWarning("A chat session is in-flight"); 
             return;
         }
-
+        const customModelConfig = getCustomModelConfiguration();  
         const editor = vscode.window.activeTextEditor;
         let document:vscode.TextDocument;
         let selectionRange:SelectionRange = new SelectionRange(0,0); 
@@ -311,7 +339,7 @@ export class ChatServiceImpl implements IChatService {
                 });
                 this.#currentAbortController = abortController;
                 this.#updateReadyState(false);
-
+                this.#logger.writeVerbose(`confirmPrompt chat begin : ${JSON.stringify(confirmPrompt)}。 token:${customModelConfig?.openaiAPIKey}`); 
                 try {
                     await chat(
                         confirmPrompt.prompt,
@@ -322,11 +350,15 @@ export class ChatServiceImpl implements IChatService {
                         resultStream
                     );
                 } catch (e) {
-                    console.error(e);
-                    // TODO: optimize the display of error message.
+
+                    this.#logger.writeError(`confirmPrompt await chat: ${e}。 token:${customModelConfig?.openaiAPIKey}`); 
+
                     this.#updateMessage(
                         replyMsgId,
-                        "\n(请求失败，请检查 1. ZCM Key是否填写正确 2. 至dev.iwhalecloud.com 网络连接是否联通 3.重启下vscode(防止配置没有生效) ",
+                        `### 请求失败(${e}) 
+* 使用助手时需要配置正确的Access Token（设置->扩展->浩鲸智能编程助手）。[如何获取Access Token](https://dev.iwhalecloud.com/doc/bidnk4/didq4Dt5ez)
+* 检查至 [dev.iwhalecloud.com](https://dev.iwhalecloud.com) 网络连接是否联通 
+* 重启下vscode(防止配置没有生效) `,
                         true
                     );
                 } finally {
@@ -365,9 +397,9 @@ export class ChatServiceImpl implements IChatService {
 }
 
 let shared: ChatServiceImpl | null = null;
-export function sharedChatServiceImpl(): ChatServiceImpl {
+export function sharedChatServiceImpl(logger:Logger): ChatServiceImpl {
     if (!shared) {
-        shared = new ChatServiceImpl();
+        shared = new ChatServiceImpl(logger);
     }
     return shared;
 }
