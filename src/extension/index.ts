@@ -4,9 +4,9 @@ import axios from "axios";
 import { simpleGit} from 'simple-git';
 import {splitGitUrl} from  './utils';
 import { Logger,LogLevel} from "./logger";
-import { setTabnineExtensionContext } from "./huggingface/globals/tabnineExtensionContext";
-
-
+import { setTabnineExtensionContext, setLogger } from "./huggingface/globals/tabnineExtensionContext";
+import installAutocomplete from "./huggingface/autocompleteInstaller";
+import { registerStatusBar, setDefaultStatus } from "./huggingface/statusBar/statusBar";
 import { GenerateSession, getScratchpadManager } from "./generate";
 import { getGlobalState } from "./globalState";
 import { ChatPanelProvider } from "./chat/chatPanelProvider";
@@ -61,6 +61,7 @@ async function handleGenerateCodeCommand() {
 
 function initStartup(context: vscode.ExtensionContext): void {
     setTabnineExtensionContext(context);
+    setLogger(logger);
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
       vscode.window.showErrorMessage('No workspace folder found.');
@@ -187,12 +188,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     // ---------------------begin huggingface
     void initStartup(context);
-    
+    registerStatusBar(context);
+    void backgroundInit(context);
 
     // ----------------------end huggingface
 
 
 }
+
+async function backgroundInit(context: vscode.ExtensionContext) {  
+    setDefaultStatus();
+    await installAutocomplete(context);
+  }
 
 export function deactivate() {
     const globalState = getGlobalState();
@@ -200,3 +207,4 @@ export function deactivate() {
     globalState.activeSession = null;
     globalState.storage = null;
 }
+
