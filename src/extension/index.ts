@@ -90,7 +90,10 @@ function initStartup(context: vscode.ExtensionContext): void {
             });
 
             logger.writeVerbose("当前工程git仓库的信息", data);
-        
+            if (! result.gitHost.endsWith("iwhalecloud.com")) {
+                logger.writeVerbose("当前git host非iwhalecloud.com结尾，不进行高危文件查询  ");
+                return;
+            }
             let config = {
                 method: 'post',
                 url: 'https://dev.iwhalecloud.com/faas/serverless/codingplus/high-risk',
