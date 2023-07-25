@@ -39,6 +39,23 @@ export class ChatServiceImpl implements IChatService {
      */
     constructor(logger:Logger) {
         this.#logger = logger;
+
+        this.#addMessage({
+            id:"", 
+            contents: `**您好，我是浩鲸智能编程助手，请问有什么可以帮助您的吗？** 
+**可以向我提问：**
+* \`有那些给js初学者的建议？\`
+* \`使用js编写一个冒泡排序算法\`
+* \`用java实现拆分一个git地址\`
+
+**也可以：**
+* 在编辑器中选中代码，点击小工具\`释\`进行选中代码解析
+* 编写完代码，测试前，点击小工具\`构\`对代码进行优化重构        
+            `, 
+            isReply: true,
+            isHtml: false,
+            isFinished:true
+        });  
     }
 
     get name(): string {

@@ -186,7 +186,7 @@ function registerAcceptHandler(): Disposable {
 async function enableInlineSuggestionsContext(): Promise<Disposable> {
   await commands.executeCommand(
     "setContext",
-    "tabnine.inline-suggestion:enabled",
+    "whalecloud.inline-suggestion:enabled",
     true
   );
 
@@ -194,7 +194,7 @@ async function enableInlineSuggestionsContext(): Promise<Disposable> {
     dispose() {
       void commands.executeCommand(
         "setContext",
-        "tabnine.inline-suggestion:enabled",
+        "whalecloud.inline-suggestion:enabled",
         undefined
       );
     },
@@ -204,7 +204,7 @@ async function enableInlineSuggestionsContext(): Promise<Disposable> {
 async function enableSnippetSuggestionsContext(): Promise<Disposable> {
   await commands.executeCommand(
     "setContext",
-    "tabnine.snippet-suggestion:enabled",
+    "whalecloud.snippet-suggestion:enabled",
     true
   );
 
@@ -212,7 +212,7 @@ async function enableSnippetSuggestionsContext(): Promise<Disposable> {
     dispose() {
       void commands.executeCommand(
         "setContext",
-        "tabnine.snippet-suggestion:enabled",
+        "whalecloud.snippet-suggestion:enabled",
         undefined
       );
     },

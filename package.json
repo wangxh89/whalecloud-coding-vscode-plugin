@@ -2,7 +2,7 @@
     "name": "whalecloud-coding-vscode-plugin",
     "displayName": "浩鲸智能编程助手（WhaleCloud Coding Plus）",
     "description": "浩鲸智能编程助手（WhaleCloud Coding Plus） for Visual Studio Code",
-    "version": "0.5.0",
+    "version": "0.6.2",
     "publisher": "tigerwong",
     "repository": {
         "type": "git",
@@ -18,9 +18,14 @@
     "keywords": [
         "whalecloud"
     ],
+    "capabilities": {
+        "virtualWorkspaces": true,
+        "untrustedWorkspaces": {
+            "supported": true
+        }
+    },
     "activationEvents": [
-        "onStartupFinished",
-        "onCommand:*"
+        "*"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -54,16 +59,6 @@
                 "title": "Reset Chat",
                 "category": "WhaleCloud",
                 "icon": "$(sync)"
-            },
-            {
-                "command": "whalecloud.signInUp",
-                "title": "Sign In / Sign Up",
-                "category": "WhaleCloud"
-            },
-            {
-                "command": "whalecloud.signOut",
-                "title": "Sign Out",
-                "category": "WhaleCloud"
             },
             {
                 "command": "whalecloud.configureApiKey",
@@ -146,12 +141,60 @@
                     ],
                     "enumDescriptions": [
                         "Use GPT 3.5 Turbo model for code generation and chat",
-                        "Use GPT 4 model for code generation and chat (requires access invitation)"
+                        "Use GPT 4 model for code generation and chat"
                     ],
                     "markdownDescription": ""
+                },
+                "whalecloud.isCodeCopilot": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "是否打开代码自动补全功能？(此配置项需要重启vscode后生效)"
                 }
             }
-        }
+        },
+        "keybindings": [
+            {
+                "key": "tab",
+                "command": "whalecloud.accept-inline-suggestion",
+                "when": "whalecloud.snippet-suggestion:enabled && whalecloud.in-inline-suggestions || whalecloud.inline-suggestion:enabled && whalecloud.in-inline-suggestions"
+            },
+            {
+                "key": "tab",
+                "command": "whalecloud.tab-override",
+                "when": "whalecloud.tab-override && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
+            },
+            {
+                "key": "tab",
+                "command": "editor.action.inlineSuggest.commit",
+                "when": "whalecloud.tab-override && inlineSuggestionVisible && !editorTabMovesFocus"
+            },
+            {
+                "key": "cmd+shift+a",
+                "command": "whalecloud.attribution"
+            },
+            {
+                "key": "ctrl+z",
+                "mac": "cmd+z",
+                "command": "whalecloud.escape-inline-suggestion",
+                "when": "whalecloud.snippet-suggestion:enabled && whalecloud.in-inline-suggestions || whalecloud.inline-suggestion:enabled && whalecloud.in-inline-suggestions"
+            },
+            {
+                "key": "alt+]",
+                "command": "whalecloud.next-inline-suggestion",
+                "when": "whalecloud.snippet-suggestion:enabled && whalecloud.in-inline-suggestions || whalecloud.inline-suggestion:enabled && whalecloud.in-inline-suggestions"
+            },
+            {
+                "key": "alt+[",
+                "command": "whalecloud.prev-inline-suggestion",
+                "when": "whalecloud.snippet-suggestion:enabled && whalecloud.in-inline-suggestions || whalecloud.inline-suggestion:enabled && whalecloud.in-inline-suggestions"
+            },
+            {
+                "key": "alt+.",
+                "mac": "ctrl+.",
+                "command": "whalecloud.snippet-suggestion",
+                "when": "whalecloud.snippet-suggestion:enabled"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run package",

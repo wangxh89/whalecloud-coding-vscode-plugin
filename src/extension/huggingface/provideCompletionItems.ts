@@ -157,8 +157,8 @@ export function completionIsAllowed(
 ): boolean {
   const configuration = vscode.workspace.getConfiguration();
   const disableLineRegex = getMisnamedConfigPropertyValue(
-    "tabnine.disableLineRegex",
-    "tabnine.disable_line_regex",
+    "whalecloud.disableLineRegex",
+    "whalecloud.disable_line_regex",
     configuration
   );
 
@@ -174,8 +174,8 @@ export function completionIsAllowed(
   }
 
   const disableFileRegex = getMisnamedConfigPropertyValue(
-    "tabnine.disableFileRegex",
-    "tabnine.disable_file_regex",
+    "whalecloud.disableFileRegex",
+    "whalecloud.disable_file_regex",
     configuration
   );
 

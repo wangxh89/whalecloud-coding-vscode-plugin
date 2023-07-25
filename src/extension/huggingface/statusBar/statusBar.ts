@@ -4,7 +4,7 @@ import StatusBarData from "./StatusBarData";
 import StatusBarPromotionItem from "./StatusBarPromotionItem";
 
 const SPINNER = "$(sync~spin)";
-const STATUS_BAR_COMMAND = "TabNine.statusBar";
+const STATUS_BAR_COMMAND = "whalecloud.statusBar";
 let statusBarData: StatusBarData | undefined;
 let promotion: StatusBarPromotionItem | undefined;
 

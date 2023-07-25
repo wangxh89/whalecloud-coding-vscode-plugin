@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as crypto from "crypto";
 import axios from "axios";
 import { simpleGit} from 'simple-git';
-import {splitGitUrl} from  './utils';
+import {splitGitUrl, getCustomModelConfiguration} from  './utils';
 import { Logger,LogLevel} from "./logger";
 import { setTabnineExtensionContext, setLogger } from "./huggingface/globals/tabnineExtensionContext";
 import installAutocomplete from "./huggingface/autocompleteInstaller";
@@ -188,9 +188,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     // ---------------------begin huggingface
     void initStartup(context);
-    registerStatusBar(context);
-    void backgroundInit(context);
 
+    //判断 系统配置项 whalecloud.isCodeCopilot 是否开启，开启后再运行
+    const customModelConfig = getCustomModelConfiguration();  
+    if (customModelConfig?.isCodeCopilot) {
+        registerStatusBar(context);
+        void backgroundInit(context);
+    }
     // ----------------------end huggingface
 
 

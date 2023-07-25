@@ -46,9 +46,9 @@ function getContext(): TabNineExtensionProperties {
   const isTypeScriptAutoImports = configuration.get<boolean>(
     "typescript.suggest.autoImports"
   );
-  const autoImportConfig = "tabnine.experimentalAutoImports";
-  const logFilePath = configuration.get<string>("tabnine.logFilePath");
-  const logLevel = configuration.get<string>("tabnine.logLevel");
+  const autoImportConfig = "whalecloud.experimentalAutoImports";
+  const logFilePath = configuration.get<string>("whalecloud.logFilePath");
+  const logLevel = configuration.get<string>("whalecloud.logLevel");
   let isTabNineAutoImportEnabled = configuration.get<boolean | null | number>(
     autoImportConfig
   );
@@ -66,7 +66,7 @@ function getContext(): TabNineExtensionProperties {
     );
   }
   const isExtensionBetaChannelEnabled =
-    configuration.get<boolean>("tabnine.receiveBetaChannelUpdates") || false;
+    configuration.get<boolean>("whalecloud.receiveBetaChannelUpdates") || false;
 
   const isVscodeInsiders = vscode.env.appName
     .toLocaleLowerCase()
@@ -151,7 +151,7 @@ function getContext(): TabNineExtensionProperties {
     },
     get codeReviewBaseUrl(): string {
       return (
-        configuration.get<string>("tabnine.codeReviewBaseUrl") ??
+        configuration.get<string>("whalecloud.codeReviewBaseUrl") ??
         "https://api.tabnine.com/code-review/"
       );
     },

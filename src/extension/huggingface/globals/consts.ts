@@ -52,12 +52,12 @@ export const INSTALL_COMMAND = "workbench.extensions.installExtension";
 export const LATEST_RELEASE_URL =
   "https://api.github.com/repos/codota/tabnine-vscode/releases";
 export const MINIMAL_SUPPORTED_VSCODE_API = "1.35.0";
-export const ALPHA_VERSION_KEY = "tabnine.alpha.version";
+export const ALPHA_VERSION_KEY = "whalecloud.alpha.version";
 export const BETA_CHANNEL_MESSAGE_SHOWN_KEY =
-  "tabnine.joinBetaChannelMessageShown";
+  "whalecloud.joinBetaChannelMessageShown";
 
 export const DEFAULT_DETAIL = BRAND_NAME;
-export const PROGRESS_KEY = "tabnine.hide.progress";
+export const PROGRESS_KEY = "whalecloud.hide.progress";
 
 export const COMPLETION_TRIGGERS = [
   " ",
@@ -147,13 +147,13 @@ export const IS_OSX = process.platform === "darwin";
 
 export const SLEEP_TIME_BEFORE_OPEN_HUB = 0;
 
-export const ACCEPT_INLINE_COMMAND = "tabnine.accept-inline-suggestion";
-export const TAB_OVERRIDE_COMMAND = "tabnine.tab-override";
-export const ESCAPE_INLINE_COMMAND = "tabnine.escape-inline-suggestion";
-export const ATTRIBUTION_COMMAND = "tabnine.attribution";
-export const NEXT_INLINE_COMMAND = "tabnine.next-inline-suggestion";
-export const PREV_INLINE_COMMAND = "tabnine.prev-inline-suggestion";
-export const SNIPPET_COMMAND = "tabnine.snippet-suggestion";
+export const ACCEPT_INLINE_COMMAND = "whalecloud.accept-inline-suggestion";
+export const TAB_OVERRIDE_COMMAND = "whalecloud.tab-override";
+export const ESCAPE_INLINE_COMMAND = "whalecloud.escape-inline-suggestion";
+export const ATTRIBUTION_COMMAND = "whalecloud.attribution";
+export const NEXT_INLINE_COMMAND = "whalecloud.next-inline-suggestion";
+export const PREV_INLINE_COMMAND = "whalecloud.prev-inline-suggestion";
+export const SNIPPET_COMMAND = "whalecloud.snippet-suggestion";
 export const PROJECT_OPEN_GITHUB_COMMAND = "HuggingFaceCode::openGithub";
 export const TABNINE_OPEN_GETTING_STARTED_COMMAND =
   "tabnine:open-getting-started";

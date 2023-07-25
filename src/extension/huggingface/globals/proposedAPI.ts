@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as os from "os";
 
-const EXTENSION_ID = "TabNine.tabnine-vscode";
+const EXTENSION_ID = "whalecloud.tabnine-vscode";
 const ARGV_FILE_NAME = "argv.json";
 const PRODUCT_FILE_NAME = "product.json";
 const PRODUCT_FILE_PATH = path.join(vscode.env.appRoot, PRODUCT_FILE_NAME);

@@ -58,7 +58,7 @@ export async function clearState(): Promise<void> {
 async function toggleInlineState(withinSuggestion: boolean): Promise<void> {
   await commands.executeCommand(
     "setContext",
-    "tabnine.in-inline-suggestions",
+    "whalecloud.in-inline-suggestions",
     withinSuggestion
   );
 }

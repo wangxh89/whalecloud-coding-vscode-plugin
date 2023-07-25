@@ -31,18 +31,21 @@ export function getNonce() {
 type CustomModelConfiguration = {
     openaiAPIKey: string;
     model: string;
+    isCodeCopilot: boolean;
 };
 
 export function getCustomModelConfiguration(): CustomModelConfiguration | null {
     const config = vscode.workspace.getConfiguration("whalecloud");
     const apiKey = config.get("devCloudAccessToken", "");
     const model = config.get("model", "");
+    const isCodeCopilot = config.get("isCodeCopilot", false);
     if (apiKey === "") {
         return null;
     }
     return {
         openaiAPIKey: apiKey,
         model,
+        isCodeCopilot
     };
 }
 
