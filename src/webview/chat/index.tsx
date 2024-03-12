@@ -92,7 +92,7 @@ export function ChatPage() {
         setMessages([]);
     }, []);
 
-    const setSelectTextAction = useCallback((selectText:string) => {
+    const setSelectTextAction = useCallback((selectText: string) => {
         setSelectText(selectText);
     }, []);
 
@@ -109,9 +109,9 @@ export function ChatPage() {
             CHAT_SERVICE_NAME
         );
 
-        const confPrompt:ConfirmPromptModel = {
+        const confPrompt: ConfirmPromptModel = {
             prompt,
-            msgType:"Freeform"
+            msgType: "Freeform"
         };
 
         await chatService.confirmPrompt(confPrompt);
@@ -123,43 +123,43 @@ export function ChatPage() {
     const handleCustom = useCallback(async (msgType: string, displayMsg?: string) => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );  
+        );
 
-        const confPrompt:ConfirmPromptModel = {
+        const confPrompt: ConfirmPromptModel = {
             prompt,
             msgType,
             displayMsg
-        };        
-        
+        };
+
         await chatService.confirmPrompt(confPrompt);
         setPrompt("");
-        setHasSelection(false);        
+        setHasSelection(false);
     }, [prompt, setPrompt, setMessages]);
 
     const handleGenVarAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );   
-        const confPrompt:ConfirmPromptModel = {
+        );
+        const confPrompt: ConfirmPromptModel = {
             prompt,
-            msgType:"GenVar"
-        };        
+            msgType: "GenVar"
+        };
         await chatService.confirmPrompt(confPrompt);
-        setPrompt("");          
+        setPrompt("");
     }, [prompt, setPrompt, setMessages]);
-    
+
     const handleGenCodeAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );   
+        );
         await chatService.generateCode(prompt);
-        setPrompt("");          
+        setPrompt("");
     }, [prompt, setPrompt, setMessages]);
 
     const handleRepoCodeAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );   
+        );
         const param = {
             "keyword": prompt, // 搜索内容            
             "page": "0", // 页数           
@@ -167,31 +167,31 @@ export function ChatPage() {
             "projectCode": "", // 项目ID            
             "scope": "inner", // 内网数据或者外网数据，现在只支持搜索内网数据            
             "searchType": "code", // 搜索doc或者code            
-            };
-            
-            await chatService.searchRepo(JSON.stringify(param));
-            
-            setPrompt("");                 
+        };
+
+        await chatService.searchRepo(JSON.stringify(param));
+
+        setPrompt("");
     }, [prompt, setPrompt, setMessages]);
-   
+
     const handleRepoDocAction = useCallback(async () => {
         const chatService = await getServiceManager().getService<IChatService>(
             CHAT_SERVICE_NAME
-        );   
-            
-            const param = {
+        );
+
+        const param = {
             "keyword": prompt, // 搜索内容            
             "page": "0", // 页数           
             "pageSize": "10", // 每页数据           
             "projectCode": "", // 项目ID            
             "scope": "inner", // 内网数据或者外网数据，现在只支持搜索内网数据            
             "searchType": "doc", // 搜索doc或者code            
-            };
-            
-            await chatService.searchRepo(JSON.stringify(param));
-            
-            setPrompt("");          
-    }, [prompt, setPrompt, setMessages]);    
+        };
+
+        await chatService.searchRepo(JSON.stringify(param));
+
+        setPrompt("");
+    }, [prompt, setPrompt, setMessages]);
 
     const confirmShortcut = useConfirmShortcut(handleAskAction);
 
@@ -200,7 +200,7 @@ export function ChatPage() {
     const confirmGenCode = useConfirmShortcut(handleGenCodeAction);
 
 
-    const repoKeyhandler = () => {};
+    const repoKeyhandler = () => { };
 
     useLayoutEffect(() => {
         if (!autoScrollFlag) {
@@ -246,22 +246,22 @@ export function ChatPage() {
                     return <MessageItem key={m.id} model={m} />;
                 })}
             </div>
-            
-            <VSCodePanels style={{paddingLeft: "14px"}}>
+
+            <VSCodePanels style={{ paddingLeft: "14px" }}>
                 <VSCodePanelTab id="AI" >问答</VSCodePanelTab>
                 <VSCodePanelTab id="search">搜索</VSCodePanelTab>
                 <VSCodePanelTab id="genVar">命名</VSCodePanelTab>
-                <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>                
+                <VSCodePanelTab id="genCode">代码辅助</VSCodePanelTab>
 
-                <VSCodePanelView id="AI" style={{paddingLeft: "0px"}}>
-                    <div style={{display:"flex",  width:"100%", flexDirection: "column"}}>
-                        { hasSelection ?
+                <VSCodePanelView id="AI" style={{ paddingLeft: "0px" }}>
+                    <div style={{ display: "flex", width: "100%", flexDirection: "column" }}>
+                        {hasSelection ?
                             <div className="chat-select-text-float">
                                 <SyntaxHighlighter
                                     style={vscDarkPlus}
-                                    codeTagProps={{ style: {maxHeight: "200px"} }}
+                                    codeTagProps={{ style: { maxHeight: "200px" } }}
                                     language="javascript"
-                                    customStyle={{ background:"#1a1b26", color: "#cbd2ea"}}
+                                    customStyle={{ background: "#1a1b26", color: "#cbd2ea" }}
                                 >
                                     {selectText}
                                 </SyntaxHighlighter>
@@ -271,15 +271,14 @@ export function ChatPage() {
                                         </path>
                                     </svg>
                                 </span>
-                            </div>  : null        
+                            </div> : null
                         }
-                        <div style={{display:"flex", width:"100%"}}>
+                        <div style={{ display: "flex", width: "100%" }}>
                             <div className="chat-input-area chat-input-area-ai">
                                 <VSCodeTextArea
                                     rows={3}
-                                    placeholder={`Talk about the ${
-                                        hasSelection ? "selected contents" : "whole document"
-                                    }...`}
+                                    placeholder={`Talk about the ${hasSelection ? "selected contents" : "whole document"
+                                        }...`}
                                     disabled={!isReady}
                                     value={prompt}
                                     onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -309,12 +308,12 @@ export function ChatPage() {
                                 {/* Can you refactor this code and explain what's changed? */}
                                 <div className="chat-input-action clickable" title="代码重构" onClick={() => handleCustom('w-04', "你能重构这个代码并解释一下发生了什么变化吗？")}>
                                     <span>构</span>
-                                    </div>
-                                    {/* Can you explain what this code does? */}
+                                </div>
+                                {/* Can you explain what this code does? */}
                                 <div className="chat-input-action clickable" title="代码解释" onClick={() => handleCustom('w-05', "你能解释一下这个代码的作用吗？")}>
                                     <span>释</span>
                                 </div>
-                                 {/* Translate the following content to 中文(简体) language: */}
+                                {/* Translate the following content to 中文(简体) language: */}
                                 <div className="chat-input-action clickable" title="翻译成中文" onClick={() => handleCustom('w-06', "将以下内容翻译成中文(简体)")}>
                                     <span>译</span>
                                 </div>
@@ -346,13 +345,13 @@ export function ChatPage() {
                             }}
                             onKeyDown={repoKeyhandler}
                         />
-                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", gap:"20px" ,width:"100%"}}>
-                        <VSCodeButton
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", gap: "20px", width: "100%" }}>
+                            <VSCodeButton
                                 disabled={!isReady || prompt.length === 0}
                                 onClick={handleRepoDocAction}
                             >
                                 {'文档库搜索'}
-                            </VSCodeButton>       
+                            </VSCodeButton>
 
                             <VSCodeButton
                                 disabled={!isReady || prompt.length === 0}
@@ -363,7 +362,7 @@ export function ChatPage() {
 
                         </div>
                     </div>
-                </VSCodePanelView>     
+                </VSCodePanelView>
 
                 <VSCodePanelView id="genVar">
                     <div className="chat-input-area">
@@ -385,17 +384,17 @@ export function ChatPage() {
                             {`生成变量名 (${confirmGenVar.label})`}
                         </VSCodeButton>
                     </div>
-                </VSCodePanelView>     
-                
+                </VSCodePanelView>
+
                 <VSCodePanelView id="genCode">
-                    <div style={{display:"flex",  width:"100%", flexDirection: "column"}}>
-                        { hasSelection ?
+                    <div style={{ display: "flex", width: "100%", flexDirection: "column" }}>
+                        {hasSelection ?
                             <div className="chat-select-text-float">
                                 <SyntaxHighlighter
                                     style={vscDarkPlus}
-                                    codeTagProps={{ style: {maxHeight: "200px"} }}
+                                    codeTagProps={{ style: { maxHeight: "200px" } }}
                                     language="javascript"
-                                    customStyle={{ background:"#1a1b26", color: "#cbd2ea"}}
+                                    customStyle={{ background: "#1a1b26", color: "#cbd2ea" }}
                                 >
                                     {selectText}
                                 </SyntaxHighlighter>
@@ -405,9 +404,9 @@ export function ChatPage() {
                                         </path>
                                     </svg>
                                 </span>
-                            </div>  : null        
+                            </div> : null
                         }
-                        <div style={{display:"flex", width:"100%"}}>                    
+                        <div style={{ display: "flex", width: "100%" }}>
                             <div className="chat-input-area">
                                 <VSCodeTextArea
                                     style={{ width: "100%" }}
@@ -429,7 +428,7 @@ export function ChatPage() {
                             </div>
                         </div>
                     </div>
-                </VSCodePanelView>                                                
+                </VSCodePanelView>
             </VSCodePanels>
         </div>
     );
